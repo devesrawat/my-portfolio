@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Design Mastery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070b14;
+  --bg2: #0c1220;
+  --bg3: #111827;
+  --card: #111827;
+  --card2: #161f33;
+  --border: #2d3748;
+  --accent: #10b981;
+  --accent2: #6366f1;
+  --accent3: #06b6d4;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --orange: #f97316;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --sidebar-w: 260px;
+  --font-display: 'Syne', 'Inter', system-ui, sans-serif;
+  --gradient-brand: linear-gradient(135deg, #10b981 0%, #06b6d4 45%, #6366f1 100%);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text);
+  min-height: 100vh; display: flex; overflow-x: hidden; position: relative;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(16,185,129,.10) 0%, transparent 45%),
+    radial-gradient(circle at 85% 20%, rgba(99,102,241,.08) 0%, transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(6,182,212,.07) 0%, transparent 50%);
+}
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .5;
+  background-image: radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+#sidebar, #main { position: relative; z-index: 1; }
+h1, h2, h3, .sidebar-logo h1 { font-family: var(--font-display); }
+
+/* SIDEBAR */
+#sidebar {
+  width: var(--sidebar-w); min-height: 100vh; background: var(--bg2);
+  border-right: 1px solid var(--border); position: fixed; top: 0; left: 0;
+  z-index: 100; display: flex; flex-direction: column; overflow-y: auto;
+}
+.sidebar-logo {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo h1 { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.sidebar-logo span { font-size: 11px; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
+.sidebar-progress { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.sidebar-progress label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; }
+.prog-bar { height: 6px; background: var(--border); border-radius: 9px; margin: 8px 0 4px; }
+.prog-fill { height: 100%; border-radius: 9px; background: var(--gradient-brand); background-size: 200% 100%; animation: progressShimmer 3s linear infinite; transition: width .4s; }
+@keyframes progressShimmer { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
+.prog-pct { font-size: 12px; color: var(--accent); font-weight: 600; }
+nav { flex: 1; padding: 12px 0; }
+nav a {
+  display: flex; align-items: center; gap: 10px; padding: 10px 20px;
+  font-size: 13px; color: var(--text2); text-decoration: none; cursor: pointer;
+  border-left: 3px solid transparent; transition: all .2s;
+}
+nav a:hover { color: var(--text); background: var(--bg3); }
+nav a.active { color: var(--accent); background: rgba(79,142,247,.08); border-left-color: var(--accent); }
+nav a .icon { font-size: 15px; width: 20px; text-align: center; }
+.nav-section { padding: 16px 20px 6px; font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1.2px; }
+
+/* MAIN */
+#main { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; }
+.page { display: none; padding: 32px 40px; max-width: 1200px; }
+.page.active { display: block; }
+
+/* TOPBAR */
+.topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+.page-title h2 { font-size: 24px; font-weight: 700; }
+.page-title p { font-size: 13px; color: var(--text2); margin-top: 4px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.badge-blue { background: rgba(79,142,247,.15); color: var(--accent); }
+.badge-green { background: rgba(16,185,129,.15); color: var(--green); }
+.badge-purple { background: rgba(124,58,237,.15); color: var(--accent2); }
+.badge-orange { background: rgba(249,115,22,.15); color: var(--orange); }
+.badge-yellow { background: rgba(245,158,11,.15); color: var(--yellow); }
+.badge-cyan { background: rgba(6,182,212,.15); color: var(--accent3); }
+
+/* CARDS */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; }
+.card-sm { padding: 16px; }
+.card h3 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+.grid { display: grid; gap: 20px; }
+.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* STAT CARDS */
+.stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.stat-card .val { font-size: 28px; font-weight: 700; margin: 8px 0 4px; }
+.stat-card .lbl { font-size: 12px; color: var(--text2); }
+.stat-card .ico { font-size: 20px; }
+
+/* WEEK CARDS */
+.week-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 16px; transition: all .2s; position: relative; overflow: hidden;
+}
+.week-card::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--border); }
+.week-card.done::before { background: var(--green); }
+.week-card.active-week::before { background: var(--accent); }
+.week-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.week-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.week-num { font-size: 11px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; }
+.week-check { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all .2s; }
+.week-check.checked { background: var(--green); border-color: var(--green); color: #fff; }
+.week-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+.week-tasks { list-style: none; }
+.week-tasks li { font-size: 12px; color: var(--text2); padding: 3px 0; display: flex; gap: 6px; align-items: flex-start; }
+.week-tasks li::before { content: '→'; color: var(--accent); font-size: 10px; margin-top: 2px; flex-shrink: 0; }
+.phase-label { font-size: 10px; padding: 2px 8px; border-radius: 9px; font-weight: 600; }
+
+/* QUESTION CARDS */
+.q-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 12px; cursor: pointer; transition: all .2s; }
+.q-card:hover { border-color: var(--accent); }
+.q-card .q-header { display: flex; align-items: center; gap: 12px; margin-bottom: 0; }
+.q-card .q-num { font-size: 11px; color: var(--text3); min-width: 28px; font-weight: 600; }
+.q-card .q-title { font-size: 14px; font-weight: 600; flex: 1; }
+.q-card .q-body { margin-top: 14px; display: none; border-top: 1px solid var(--border); padding-top: 14px; }
+.q-card.open .q-body { display: block; }
+.q-card .q-body h4 { font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.8px; margin: 12px 0 6px; font-weight: 600; }
+.q-card .q-body p, .q-card .q-body li { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.q-card .q-body ul { padding-left: 16px; margin-top: 4px; }
+.q-card .q-body li { margin-bottom: 4px; }
+.diff-badge { font-size: 11px; padding: 2px 10px; border-radius: 20px; font-weight: 600; }
+.diff-easy { background: rgba(16,185,129,.15); color: var(--green); }
+.diff-med { background: rgba(245,158,11,.15); color: var(--yellow); }
+.diff-hard { background: rgba(239,68,68,.15); color: var(--red); }
+.diff-nightmare { background: rgba(124,58,237,.15); color: var(--accent2); }
+.company-tag { font-size: 11px; color: var(--text3); padding: 2px 8px; background: var(--bg3); border-radius: 9px; }
+
+/* FILTERS */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.filter-btn { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-size: 12px; cursor: pointer; transition: all .2s; }
+.filter-btn:hover, .filter-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* CONTENT CALENDAR */
+.cal-week { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 10px; }
+.cal-week-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.cal-week-num { font-size: 11px; font-weight: 700; color: var(--text3); min-width: 60px; }
+.cal-posts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cal-post { background: var(--bg3); border-radius: 8px; padding: 12px; }
+.cal-post .day { font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; font-weight: 700; }
+.cal-post .topic { font-size: 12px; font-weight: 600; margin-bottom: 4px; }
+.cal-post .hook { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.cal-post .pillar { font-size: 10px; padding: 2px 8px; border-radius: 9px; margin-top: 6px; display: inline-block; font-weight: 600; }
+
+/* MENTAL MODEL */
+.tree-node { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; text-align: center; font-size: 13px; font-weight: 600; position: relative; }
+.tree-node.decision { border-color: var(--accent); background: rgba(79,142,247,.08); }
+.tree-node.result { border-color: var(--green); background: rgba(16,185,129,.08); font-size: 12px; }
+.tree-node.warning { border-color: var(--yellow); background: rgba(245,158,11,.08); }
+.tree-connector { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+.tree-connector span { font-size: 11px; color: var(--text3); white-space: nowrap; }
+.tree-line { flex: 1; height: 1px; background: var(--border); }
+.decision-branch { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.branch-label { font-size: 11px; color: var(--text3); text-align: center; margin-bottom: 4px; }
+
+/* CTO TOOLKIT */
+.toolkit-section { margin-bottom: 24px; }
+.toolkit-section h3 { font-size: 14px; font-weight: 700; margin-bottom: 12px; color: var(--text); padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.checklist-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(42,58,92,.5); }
+.checklist-item:last-child { border-bottom: none; }
+.check-box { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 4px; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: all .2s; }
+.check-box.checked { background: var(--green); border-color: var(--green); color: #fff; font-size: 11px; }
+.checklist-item .ci-text { flex: 1; }
+.checklist-item .ci-title { font-size: 13px; font-weight: 500; }
+.checklist-item .ci-desc { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.severity { font-size: 10px; padding: 2px 8px; border-radius: 9px; font-weight: 600; margin-left: auto; flex-shrink: 0; }
+.sev-critical { background: rgba(239,68,68,.15); color: var(--red); }
+.sev-high { background: rgba(249,115,22,.15); color: var(--orange); }
+.sev-med { background: rgba(245,158,11,.15); color: var(--yellow); }
+
+/* PRICING */
+.pricing-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; }
+.pricing-card.featured { border-color: var(--accent); background: rgba(79,142,247,.06); }
+.pricing-tier { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.pricing-price { font-size: 32px; font-weight: 800; margin: 12px 0; }
+.pricing-price span { font-size: 14px; font-weight: 400; color: var(--text2); }
+.pricing-features { list-style: none; text-align: left; margin: 16px 0; }
+.pricing-features li { font-size: 13px; color: var(--text2); padding: 6px 0; display: flex; gap: 8px; align-items: flex-start; }
+.pricing-features li::before { content: '✓'; color: var(--green); font-weight: 700; }
+
+/* AUTHORITY */
+.authority-card { background: linear-gradient(135deg, rgba(16,185,129,.10), rgba(99,102,241,.10)); border: 1px solid rgba(16,185,129,.3); border-radius: 14px; padding: 28px; box-shadow: 0 0 40px rgba(16,185,129,.12); }
+.authority-headline { font-family: var(--font-display); }
+.authority-headline { font-size: 20px; font-weight: 800; line-height: 1.4; margin-bottom: 16px; }
+.authority-headline em { font-style: normal; color: var(--accent); }
+.authority-body { font-size: 14px; color: var(--text2); line-height: 1.7; }
+.pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+.pillar { background: var(--card); border-radius: 10px; padding: 16px; border: 1px solid var(--border); }
+.pillar .pillar-icon { font-size: 24px; margin-bottom: 8px; }
+.pillar h4 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.pillar p { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+/* TABS */
+.tabs { display: flex; gap: 2px; margin-bottom: 24px; background: var(--bg2); border-radius: 10px; padding: 4px; width: fit-content; }
+.tab { padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; color: var(--text2); transition: all .2s; font-weight: 500; border: none; background: transparent; }
+.tab.active { background: var(--card); color: var(--text); }
+
+/* MILESTONE */
+.milestone { display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--border); }
+.milestone:last-child { border-bottom: none; }
+.ms-week { font-size: 12px; color: var(--text3); min-width: 60px; font-weight: 600; }
+.ms-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.ms-content { flex: 1; }
+.ms-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
+.ms-desc { font-size: 12px; color: var(--text2); }
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 9px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text3); }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  #sidebar { transform: translateX(-100%); }
+  #main { margin-left: 0; }
+  .page { padding: 20px; }
+  .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.page.active { animation: fadeIn .25s ease; }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { font-size: 11px; padding: 3px 10px; border-radius: 9px; background: var(--bg3); color: var(--text2); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <span>24-Week Program</span>
+    <h1>System Design<br>Mastery</h1>
+  </div>
+  <div class="sidebar-progress">
+    <label>Overall Progress</label>
+    <div class="prog-bar"><div class="prog-fill" id="globalProg" style="width:0%"></div></div>
+    <span class="prog-pct" id="globalPct">0% complete</span>
+  </div>
+  <nav>
+    <div class="nav-section">Overview</div>
+    <a class="active" onclick="nav('dashboard')"><span class="icon">🏠</span> Dashboard</a>
+    <a onclick="nav('authority')"><span class="icon">⭐</span> Authority Statement</a>
+
+    <div class="nav-section">Core Program</div>
+    <a onclick="nav('phase1')"><span class="icon">🧱</span> Phase 1 · Foundation</a>
+    <a onclick="nav('phase2')"><span class="icon">🎯</span> Phase 2 · Interviews</a>
+    <a onclick="nav('phase3')"><span class="icon">📢</span> Phase 3 · Authority</a>
+    <a onclick="nav('phase4')"><span class="icon">🏢</span> Phase 4 · Fractional CTO</a>
+
+    <div class="nav-section">Tools</div>
+    <a onclick="nav('questions')"><span class="icon">❓</span> 30 Interview Questions</a>
+    <a onclick="nav('mental')"><span class="icon">🧠</span> Mental Model Tree</a>
+    <a onclick="nav('calendar')"><span class="icon">📅</span> Content Calendar</a>
+    <a onclick="nav('toolkit')"><span class="icon">🔧</span> CTO Toolkit</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main id="main">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div class="topbar">
+    <div class="page-title">
+      <h2>Dashboard</h2>
+      <p>Your path to Top 1% System Design expertise — 24 weeks, 4 phases</p>
+    </div>
+    <span class="badge badge-blue">Week <span id="currentWeek">1</span> / 24</span>
+  </div>
+
+  <div class="grid grid-4" style="margin-bottom:24px">
+    <div class="stat-card">
+      <div class="ico">📚</div>
+      <div class="val" id="stat-weeks">0/24</div>
+      <div class="lbl">Weeks Complete</div>
+    </div>
+    <div class="stat-card">
+      <div class="ico">❓</div>
+      <div class="val" id="stat-qs">0/30</div>
+      <div class="lbl">Questions Practiced</div>
+    </div>
+    <div class="stat-card">
+      <div class="ico">✍️</div>
+      <div class="val" id="stat-posts">0/48</div>
+      <div class="lbl">Posts Published</div>
+    </div>
+    <div class="stat-card">
+      <div class="ico">🎯</div>
+      <div class="val" id="stat-checks">0%</div>
+      <div class="lbl">Toolkit Checks</div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom:24px">
+    <div class="card">
+      <h3>Phase Progress</h3>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:4px">
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span>Phase 1 · Foundation Crystallization</span><span style="color:var(--text3)" id="p1pct">0%</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="p1bar" style="width:0%;background:linear-gradient(90deg,#10b981,#06b6d4)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span>Phase 2 · Interview Mastery</span><span style="color:var(--text3)" id="p2pct">0%</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="p2bar" style="width:0%;background:linear-gradient(90deg,#4f8ef7,#7c3aed)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span>Phase 3 · Authority Building</span><span style="color:var(--text3)" id="p3pct">0%</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="p3bar" style="width:0%;background:linear-gradient(90deg,#f59e0b,#f97316)"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span>Phase 4 · Fractional CTO</span><span style="color:var(--text3)" id="p4pct">0%</span></div>
+          <div class="prog-bar"><div class="prog-fill" id="p4bar" style="width:0%;background:linear-gradient(90deg,#7c3aed,#ec4899)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Key Milestones</h3>
+      <div class="milestone"><span class="ms-week">Wk 6</span><div class="ms-dot" style="background:var(--green)"></div><div class="ms-content"><div class="ms-title">Foundation Complete</div><div class="ms-desc">DDIA consolidated, mental models locked</div></div></div>
+      <div class="milestone"><span class="ms-week">Wk 8</span><div class="ms-dot" style="background:var(--accent3)"></div><div class="ms-content"><div class="ms-title">First Viral Post (2K→10K reach)</div><div class="ms-desc">Warm network of 2,000 connections activated — one post breaks containment</div></div></div>
+      <div class="milestone"><span class="ms-week">Wk 12</span><div class="ms-dot" style="background:var(--accent)"></div><div class="ms-content"><div class="ms-title">Interview Ready</div><div class="ms-desc">30 questions practiced, "clear hire" calibrated</div></div></div>
+      <div class="milestone"><span class="ms-week">Wk 14</span><div class="ms-dot" style="background:var(--orange)"></div><div class="ms-content"><div class="ms-title">First CTO Inquiry</div><div class="ms-desc">Inbound DM from existing network — toolkit pulled forward to close it</div></div></div>
+      <div class="milestone"><span class="ms-week">Wk 16</span><div class="ms-dot" style="background:var(--yellow)"></div><div class="ms-content"><div class="ms-title">Authority Voice Established</div><div class="ms-desc">16 posts published, newsletter launched off existing connections</div></div></div>
+      <div class="milestone"><span class="ms-week">Wk 24</span><div class="ms-dot" style="background:var(--accent2)"></div><div class="ms-content"><div class="ms-title">Top 1% Threshold</div><div class="ms-desc">10K+ reach from 2K warm base, 3+ paid CTO clients, FANG-ready</div></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Success Metrics Tracker</h3>
+    <div class="grid grid-4" style="margin-top:8px">
+      <div style="text-align:center;padding:16px;background:var(--bg3);border-radius:10px">
+        <div style="font-size:28px;font-weight:800;color:var(--green)">0</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">FANG Questions Solved</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Target: 30 "Clear Hire"</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:var(--bg3);border-radius:10px">
+        <div style="font-size:28px;font-weight:800;color:var(--accent)">0</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">LinkedIn Reach (warm base: 2K)</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Target: 2K → 10K+ impressions/post</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:var(--bg3);border-radius:10px">
+        <div style="font-size:28px;font-weight:800;color:var(--yellow)">0</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">Startup DMs</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Target: 3+ inbound</div>
+      </div>
+      <div style="text-align:center;padding:16px;background:var(--bg3);border-radius:10px">
+        <div style="font-size:28px;font-weight:800;color:var(--accent2)">0</div>
+        <div style="font-size:12px;color:var(--text2);margin-top:4px">Speaking Invites</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">Target: 1 panel/podcast</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTHORITY STATEMENT -->
+<div class="page" id="page-authority">
+  <div class="topbar">
+    <div class="page-title"><h2>Personal Authority Statement</h2><p>Your expertise moat — how you position yourself</p></div>
+  </div>
+  <div class="authority-card" style="margin-bottom:24px">
+    <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;font-weight:700">LinkedIn Headline</div>
+    <div class="authority-headline">
+      <em>Distributed Systems Architect</em> · Scaling fintech &amp; AI backends from 0→100M users · Rust/TypeScript · Toptal Top 3% · Fractional CTO for regulated startups
+    </div>
+    <div class="authority-body">
+      I've spent 8 years in the trenches of distributed systems — not theorising about CAP theorem, but <strong>making payment systems stay up</strong> during Black Friday spikes, designing audit trails that survive regulatory scrutiny, and wiring up real-time pipelines that process millions of events per second without flinching. My open-source project <em>mcp-forge</em> (Rust) sits at the intersection of AI infrastructure and systems programming — the exact terrain where frontier AI companies are building right now.<br><br>
+      I work with BFSI startups at the $1M→$100M inflection point — the exact moment where "it works on our laptop" collides with "we just signed an enterprise customer and our DB is on fire." I help CTOs make the architectural bets that don't become liabilities at scale. My background means I can read your stack, identify the three things that will kill you in the next 12 months, and build the migration plan that doesn't require rewriting everything.<br><br>
+      I'm not starting this from zero — 2,000 existing connections across fintech, AI infra, and Toptal's network are the first readers of everything I publish here. The goal isn't follower growth, it's converting a warm, technical audience into inbound conversations with the founders and hiring managers in it.
+    </div>
+  </div>
+  <div class="pillars">
+    <div class="pillar">
+      <div class="pillar-icon">⚙️</div>
+      <h4>Scalability Patterns</h4>
+      <p>Technical deep-dives on real architectural decisions — event sourcing, CQRS, saga patterns, sharding strategies. Written from production war stories.</p>
+      <div class="tag-row"><span class="tag">Monday posts</span><span class="tag">800 words</span><span class="tag">Long-form</span></div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🎯</div>
+      <h4>Design Interview Lessons</h4>
+      <p>Real interview scenarios deconstructed — what interviewers are actually testing, what candidates consistently miss, and how to signal "clear hire" vs. "maybe."</p>
+      <div class="tag-row"><span class="tag">Friday posts</span><span class="tag">300 words</span><span class="tag">Quick insights</span></div>
+    </div>
+    <div class="pillar">
+      <div class="pillar-icon">🏦</div>
+      <h4>Fractional CTO Notes</h4>
+      <p>Startup scaling advice for BFSI/fintech founders — DPDP compliance, payment system architecture, the $10M→$100M architectural pivot, cost of tech debt.</p>
+      <div class="tag-row"><span class="tag">Bi-weekly</span><span class="tag">Founder audience</span><span class="tag">Actionable</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 1 -->
+<div class="page" id="page-phase1">
+  <div class="topbar">
+    <div class="page-title"><h2>Phase 1 · Foundation Crystallization</h2><p>Weeks 1–6 · Consolidate DDIA + interview frameworks into a single mental model</p></div>
+    <span class="badge badge-green">Weeks 1–6</span>
+  </div>
+  <div class="grid" id="phase1-weeks"></div>
+</div>
+
+<!-- PHASE 2 -->
+<div class="page" id="page-phase2">
+  <div class="topbar">
+    <div class="page-title"><h2>Phase 2 · Interview Mastery</h2><p>Weeks 7–12 · Simulation-based prep with FANG rubric calibration</p></div>
+    <span class="badge badge-blue">Weeks 7–12</span>
+  </div>
+  <div class="grid" id="phase2-weeks"></div>
+</div>
+
+<!-- PHASE 3 -->
+<div class="page" id="page-phase3">
+  <div class="topbar">
+    <div class="page-title"><h2>Phase 3 · Authority Building</h2><p>Weeks 7–24 · LinkedIn thought leadership running parallel to interview prep</p></div>
+    <span class="badge badge-yellow">Weeks 7–24</span>
+  </div>
+  <div class="grid" id="phase3-weeks"></div>
+</div>
+
+<!-- PHASE 4 -->
+<div class="page" id="page-phase4">
+  <div class="topbar">
+    <div class="page-title"><h2>Phase 4 · Fractional CTO Readiness</h2><p>Weeks 13–24 · Architecture audit toolkit + consulting positioning</p></div>
+    <span class="badge badge-purple">Weeks 13–24</span>
+  </div>
+  <div class="grid" id="phase4-weeks"></div>
+</div>
+
+<!-- QUESTIONS -->
+<div class="page" id="page-questions">
+  <div class="topbar">
+    <div class="page-title"><h2>30 Interview Questions</h2><p>Ranked by difficulty — click to expand solution framework</p></div>
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterQ('all',this)">All (30)</button>
+    <button class="filter-btn" onclick="filterQ('easy',this)">Easy (8)</button>
+    <button class="filter-btn" onclick="filterQ('medium',this)">Medium (10)</button>
+    <button class="filter-btn" onclick="filterQ('hard',this)">Hard (7)</button>
+    <button class="filter-btn" onclick="filterQ('nightmare',this)">Nightmare (5)</button>
+  </div>
+  <div id="questions-list"></div>
+</div>
+
+<!-- MENTAL MODEL -->
+<div class="page" id="page-mental">
+  <div class="topbar">
+    <div class="page-title"><h2>Top 1% Mental Model</h2><p>Given constraints → pick the right architecture. Decision tree for any system design prompt.</p></div>
+  </div>
+  <div id="mental-content"></div>
+</div>
+
+<!-- CONTENT CALENDAR -->
+<div class="page" id="page-calendar">
+  <div class="topbar">
+    <div class="page-title"><h2>LinkedIn Content Calendar</h2><p>24 weeks of post prompts — 2× per week, 3 content pillars</p></div>
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterCal('all',this)">All Weeks</button>
+    <button class="filter-btn" onclick="filterCal('scalability',this)">🔵 Scalability Patterns</button>
+    <button class="filter-btn" onclick="filterCal('interview',this)">🟡 Interview Lessons</button>
+    <button class="filter-btn" onclick="filterCal('cto',this)">🟣 CTO Notes</button>
+  </div>
+  <div id="calendar-list"></div>
+</div>
+
+<!-- CTO TOOLKIT -->
+<div class="page" id="page-toolkit">
+  <div class="topbar">
+    <div class="page-title"><h2>Fractional CTO Diagnostic Toolkit</h2><p>Architecture audit framework for BFSI startups + pricing strategy</p></div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('audit',this)">🔍 Architecture Audit</button>
+    <button class="tab" onclick="switchTab('growth',this)">📈 Growth Stage Pivots</button>
+    <button class="tab" onclick="switchTab('bfsi',this)">🏦 BFSI Checklist</button>
+    <button class="tab" onclick="switchTab('pricing',this)">💰 Pricing Strategy</button>
+  </div>
+  <div id="toolkit-content"></div>
+</div>
+
+</main>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const WEEKS = [
+  // Phase 1
+  { id:'w1', phase:1, title:'DDIA Part I — Reliability & Scalability', tasks:['Read DDIA Ch1-2: Data Models & Foundations','Extract: reliability vs availability definitions','Map to fintech: payment idempotency patterns','Write your first mental model: "What makes a system reliable?"','LinkedIn: Audit existing content, define 3 pillars'] },
+  { id:'w2', phase:1, title:'Storage Engines & Replication Deep Dive', tasks:['DDIA Ch3: Storage Engines (B-Trees vs LSM-Trees)','DDIA Ch5: Replication — leader/follower, leaderless','Anti-pattern: Why you should NOT roll your own replication','Map: Your fintech DB experience → patterns','Start "Scalability Anti-Patterns" doc'] },
+  { id:'w3', phase:1, title:'Partitioning, Transactions & CAP Theorem', tasks:['DDIA Ch6: Partitioning strategies — range vs hash','DDIA Ch7: Transactions — ACID, 2PC, sagas','CAP theorem: stop memorising, start trading off','Practice: Design a financial ledger with ACID guarantees','Interview Book Vol1 Ch1-3: URL Shortener, Rate Limiter'] },
+  { id:'w4', phase:1, title:'Distributed Systems Fundamentals', tasks:['DDIA Ch8: The Trouble with Distributed Systems','DDIA Ch9: Consistency & Consensus (Paxos, Raft simplified)','Mental model: linearisability vs eventual consistency','Practice: Design a distributed lock service','Interview Book Vol1 Ch4-6: Key-Value Store, CDN'] },
+  { id:'w5', phase:1, title:'Stream Processing & Batch Systems', tasks:['DDIA Ch10: Batch Processing (MapReduce patterns)','DDIA Ch11: Stream Processing (Kafka, event sourcing)','Your edge: real-time fintech → translate to system design','Design: Real-time fraud detection pipeline','Interview Book Vol2 Ch1-4: Google Maps, Notification System'] },
+  { id:'w6', phase:1, title:'Foundation Synthesis + Anti-Patterns Decoder', tasks:['Synthesise all mental models into one decision tree','Complete "Scalability Anti-Patterns Decoder" (20 entries)','Build 50-question diagnosis framework (first 25)','Mock design session: Design Twitter timeline for 100M users','Review: Can you trade off CAP with precision?'] },
+  // Phase 2
+  { id:'w7', phase:2, title:'Interview Framework & Calibration', tasks:['Learn: RADIO framework (Requirements, API, Data, Implementation, Optimisation)','Calibrate "clear hire" vs "maybe" rubric','Practice Q1-5 (Easy): URL Shortener, Pastebin, TinyURL, Rate Limiter, Web Crawler','Record yourself — review for filler, clarity, structure','Post: "What I learned doing 5 mock system design interviews"'] },
+  { id:'w8', phase:2, title:'Distributed Storage Systems', tasks:['Practice Q6-10 (Easy→Medium): Key-Value Store, File Storage, S3-like, CDN, Notification','Deep dive: Consistent hashing — how Dynamo really works','Anti-pattern: Over-engineering for scale you don\'t have','Mock with timer: 45 minutes strict, self-grade','LinkedIn Monday: "Consistent Hashing explained from production"'] },
+  { id:'w9', phase:2, title:'Social & Feed Systems', tasks:['Practice Q11-14 (Medium): Twitter Feed, Instagram, Facebook Messenger, YouTube','Trade-off exercise: Push vs pull feed — when each fails','Fanout problem: How Uber Eats handles driver location broadcasts','Identify your go-to opening statement for any feed problem','LinkedIn Friday: "3 mistakes engineers make designing feed systems"'] },
+  { id:'w10', phase:2, title:'Real-Time & Financial Systems', tasks:['Practice Q15-18 (Hard): Uber real-time, Payment system, Stock exchange, Distributed counter','Your edge: 8 years fintech → articulate exact trade-offs for financial systems','Saga pattern deep dive: choreography vs orchestration','Map: How your production experience answers interview questions','LinkedIn Monday: "Designing a payment system for 100M users in India"'] },
+  { id:'w11', phase:2, title:'ML Infrastructure & Search Systems', tasks:['Practice Q19-22 (Hard): Search engine, Recommendation system, Ad click aggregator, ML feature store','Understand: How Anthropic/OpenAI handle model serving at scale','Trade-off: Batch vs online feature computation','LinkedIn Friday: "What Anthropic\'s system design looks like (educated guess)"'] },
+  { id:'w12', phase:2, title:'Nightmare Scenarios & Final Calibration', tasks:['Practice Q23-25 (Hard): Distributed tracing, Consensus under Byzantine failures, Geo-distributed DB','Practice Q26-30 (Nightmare): Full-stack chaos scenarios','Run 3 full mock interviews — 45 min each','Grade each: hired / maybe / no-hire with specific reasons','Final rubric check: Am I at "clear hire" level?'] },
+  // Phase 3 sample weeks (w7-w24 subset for display)
+  { id:'w13', phase:3, title:'Fractional CTO: First Diagnostic Framework', tasks:['Build: 30-point architecture health check template','Research: Top 5 BFSI startups your 2K-connection network already touches (tech stack analysis)','Create "cost of delay" calculator for tech debt','LinkedIn Monday: "The 3 architectural decisions that kill BFSI startups"','DM 5 founders already in your network — you don\'t need cold outreach, you need to activate warm ties'] },
+  { id:'w14', phase:3, title:'$1M→$10M Architecture Pivot Playbook', tasks:['Document the exact moment a startup needs a DB migration','Case study: Build $1M→$10M pivot plan (monolith → services)','Payment system India case study: UPI, NACH, reconciliation at scale','LinkedIn Monday: "When to split your monolith (and when not to)"','Launch fractional CTO services page — announce it directly to your 2K connections, not a cold audience'] },
+  { id:'w15', phase:3, title:'BFSI Regulatory Architecture', tasks:['Map DPDP Act requirements to system design decisions','PCI-DSS: What it means for your data store choices','Audit trail design: append-only logs, tamper-evident systems','LinkedIn Friday: "What DPDP means for your startup\'s data architecture"','Create: BFSI compliance architecture checklist'] },
+  { id:'w16', phase:3, title:'Authority Acceleration', tasks:['Publish 16th LinkedIn post — reflect on what\'s working, name the post that broke containment','Convert engaged commenters from your network into a newsletter list (warm-to-owned channel)','Apply to 1 architecture panel or podcast, citing engagement from your existing audience','Build: "System Design for Indian Fintech" mini PDF guide — gate it behind newsletter signup','LinkedIn Monday: "6 months of writing about distributed systems — here\'s what happened"'] },
+  { id:'w17', phase:4, title:'Observability & SRE Patterns', tasks:['SRE deep dive: SLOs, SLIs, error budgets','Distributed tracing: OpenTelemetry, Jaeger, production patterns','Capacity planning: How to size a system correctly upfront','Add to CTO toolkit: Observability readiness scorecard','LinkedIn Friday: "Why your startup doesn\'t need Kubernetes yet"'] },
+  { id:'w18', phase:4, title:'Chaos Engineering & Resilience', tasks:['Chaos engineering: What it is, how to sell it to founders','Failure modes catalogue: Network partitions, clock skew, cascade failures','Practice nightmare Q: Designing for Byzantine fault tolerance','LinkedIn Monday: "I ran a chaos test on a payment system. Here\'s what broke."'] },
+  { id:'w19', phase:4, title:'Event-Driven Architecture Mastery', tasks:['Event sourcing: Full pattern with projections and snapshots','CQRS: When it helps, when it\'s over-engineering','Outbox pattern: Solving dual-write problems in fintech','LinkedIn Friday: "The outbox pattern saved our payment integrity"','Update CTO toolkit: Event-driven readiness checklist'] },
+  { id:'w20', phase:4, title:'Consulting Positioning & Pricing', tasks:['Finalise fractional CTO pricing tiers','Create: "Architecture Audit" 2-hour paid engagement offer','Write case study: anonymous real engagement (or hypothetical)','LinkedIn Monday: "What I charge as a fractional CTO — and why"','Reach out to 5 potential clients with specific value prop'] },
+  { id:'w21', phase:4, title:'$10M→$100M Scale Patterns', tasks:['Global distribution: Multi-region, active-active architectures','Sharding strategies for financial data at scale','Read traffic explosion: Caching layers, CDN, read replicas','LinkedIn Friday: "The 4 sharding mistakes that will haunt you at $100M"','Add case study to consulting website'] },
+  { id:'w22', phase:4, title:'India-Specific Financial Architecture', tasks:['UPI at scale: How NPCI handles 10B transactions/month','NACH, NEFT, RTGS — design constraints and trade-offs','Aadhaar integration: Privacy-preserving KYC patterns','LinkedIn Monday: "Designing for Bharat scale: what Silicon Valley gets wrong"','Create: India BFSI architecture reference doc'] },
+  { id:'w23', phase:4, title:'Final Authority & FANG Refinement', tasks:['Run 2 final FANG mock interviews — aim for "clear hire"','Publish landmark LinkedIn post: "24 weeks of system design — what I know now"','Update personal site with full consulting offering','Reach out to 1 startup for paid architecture audit','Review all 4 phase milestones — what\'s left?'] },
+  { id:'w24', phase:4, title:'Launch & Next 6 Months', tasks:['Final self-assessment: All Top 1% outcomes achieved?','Set 6-month goals: LinkedIn reach, consulting revenue, FANG applications','Publish: "System Design Mastery — my 24-week program" (open source your framework)','LinkedIn Monday: "I set out to reach Top 1% system design. Here\'s the truth."','Celebrate — you\'ve built an expertise moat'] },
+];
+
+const QUESTIONS = [
+  // Easy
+  { id:'q1', diff:'easy', company:'Meta/Google', title:'Design a URL Shortener (TinyURL)', framework:'1. Clarify scale (100M URLs, 10:1 read/write). 2. Key insight: base62 encoding of auto-increment ID. 3. Data model: Short→Long mapping in Redis (hot) + PostgreSQL (durable). 4. Scale: consistent hashing for cache, DB sharding by short URL prefix. 5. Follow-up: Analytics tracking without hot key problem.', mistakes:'Using UUID as short key (too long). Forgetting collision handling. Not designing redirect as 301 vs 302.', followup:'How would you handle custom aliases? Expiry? Analytics at 1B clicks/day?', solved:false },
+  { id:'q2', diff:'easy', company:'Amazon', title:'Design a Rate Limiter', framework:'1. Algorithms: Token bucket (burstable), sliding window counter, fixed window. 2. Distributed: Redis INCR + EXPIRE for fixed window; sorted sets for sliding window. 3. Where to place: API gateway, middleware, service-level. 4. User vs IP vs tenant rate limits. 5. Graceful degradation: 429 vs queuing.', mistakes:'Not handling distributed state — local rate limits don\'t work in multi-pod. Forgetting race conditions in Redis INCR.', followup:'Rate limiting for ML API with variable token costs? Adaptive rate limiting?', solved:false },
+  { id:'q3', diff:'easy', company:'Google', title:'Design a Web Crawler', framework:'1. URL frontier: priority queue (BFS + politeness). 2. Distributed fetchers: consistent hashing by domain. 3. HTML parser → URL extractor → deduplication (Bloom filter). 4. Storage: raw pages in S3, metadata in PostgreSQL. 5. Politeness: robots.txt, crawl delay, domain rate limiting.', mistakes:'Not handling cycles (URL normalisation, visited set). Forgetting DNS caching. Not considering dynamic JS-rendered pages.', followup:'Real-time freshness scoring? How Google handles 1T pages?', solved:false },
+  { id:'q4', diff:'easy', company:'Any', title:'Design a Key-Value Store', framework:'1. Single node: hash map in memory + WAL for durability. 2. Scale: consistent hashing ring for distribution. 3. Replication: N copies, R reads, W writes — tune for consistency. 4. Conflict resolution: vector clocks or last-write-wins. 5. Compaction: LSM tree vs B-tree trade-offs.', mistakes:'Ignoring the difference between available KV store and strongly consistent one. Not addressing data loss on crash.', followup:'How would you add TTL? Transactions across keys?', solved:false },
+  { id:'q5', diff:'easy', company:'Netflix', title:'Design a CDN', framework:'1. Edge PoPs near users, origin servers for source. 2. Cache hierarchy: edge → regional → origin. 3. Cache key: URL + Vary headers. 4. Eviction: LRU + TTL. 5. Dynamic content: short TTL or bypass. 6. Invalidation: tag-based vs path-based purge.', mistakes:'Forgetting cache stampede on popular content. Not considering HTTP streaming for video.', followup:'How to handle video streaming with adaptive bitrate? Cache invalidation at scale?', solved:false },
+  { id:'q6', diff:'easy', company:'Any', title:'Design a Notification System', framework:'1. Types: push, email, SMS, in-app. 2. Flow: Event → message queue → notification service per channel. 3. User preference store: which channels, quiet hours. 4. Deduplication: idempotency keys. 5. Retry with exponential backoff. 6. DLQ for failed notifications.', mistakes:'Not handling user opt-outs. No deduplication (double notifications). Synchronous delivery blocking main flow.', followup:'Real-time vs scheduled notifications? Priority queues for critical alerts?', solved:false },
+  { id:'q7', diff:'easy', company:'Uber', title:'Design a Ride-Matching Service (simplified)', framework:'1. Geo-index: geohash or S2 cells for driver location. 2. Matching: nearest available driver. 3. Real-time: WebSocket for location updates. 4. Consistency: soft state — driver location refreshes every 5s. 5. Surge pricing: separate read path.', mistakes:'Treating geo-queries as simple DB queries (too slow). Not handling driver going offline mid-match.', followup:'Multi-city routing? Real-time ETA calculation at scale?', solved:false },
+  { id:'q8', diff:'easy', company:'Dropbox', title:'Design a File Storage System', framework:'1. Chunking: split files into 4MB blocks, deduplicate by hash. 2. Metadata DB: file → list of chunks. 3. Storage: S3-compatible object store. 4. Sync: local daemon watches changes, uploads deltas. 5. Sharing: permission model in DB.', mistakes:'Not chunking (can\'t resume large uploads). No dedup (storage costs). Forgetting conflict resolution for concurrent edits.', followup:'Real-time collaboration on docs? Delta sync optimisation?', solved:false },
+  // Medium
+  { id:'q9', diff:'medium', company:'Twitter/X', title:'Design Twitter/X Feed', framework:'1. Write: tweet → fanout to followers\' feed lists (push model). 2. For celebrities (10M+ followers): pull model at read time. 3. Hybrid: push for <1M followers, pull for mega-accounts, merge at read. 4. Feed cache: pre-computed per user in Redis. 5. Ranking: engagement signals, recency decay.', mistakes:'Pure push (celebrity problem). Pure pull (slow feeds). Not handling the merge of push+pull results.', followup:'How does Twitter actually do it? Real-time trending topics at scale?', solved:false },
+  { id:'q10', diff:'medium', company:'Facebook', title:'Design Facebook Messenger', framework:'1. Storage: message DB per conversation, indexed by (conv_id, timestamp). 2. Real-time: WebSocket per client → message broker → all participants. 3. Delivery receipts: DB status per (message, user). 4. Offline: pull on reconnect. 5. Group chats: fanout via message queue.', mistakes:'Not handling message ordering in distributed systems. Missing delivery/read receipts design.', followup:'E2E encryption at scale? Message search? Voice/video signalling?', solved:false },
+  { id:'q11', diff:'medium', company:'YouTube', title:'Design YouTube', framework:'1. Upload: chunked upload → S3 → transcoding jobs queue → HLS output per resolution. 2. CDN: video segments served from edge, not origin. 3. Metadata: video info in PostgreSQL, recommendation data in graph DB. 4. View count: approximate counter (HyperLogLog) at scale. 5. Search: Elasticsearch on title/description.', mistakes:'Not designing async transcoding. Serving video from origin (kills bandwidth). Exact view counts at scale.', followup:'Real-time view count for viral videos? Content moderation pipeline?', solved:false },
+  { id:'q12', diff:'medium', company:'Instagram', title:'Design Instagram', framework:'1. Photo upload: client → CDN origin → storage (S3) + thumbnail generation. 2. Feed: hybrid push/pull per Twitter pattern. 3. Explore: offline computed recommendation graph. 4. Stories: 24h TTL in separate store. 5. Scale: different read/write paths, separate caching layers.', mistakes:'Same DB for photos + metadata (different scaling needs). Not separating story from feed storage.', followup:'Real-time story views? How to handle 100M daily active users?', solved:false },
+  { id:'q13', diff:'medium', company:'Airbnb', title:'Design a Hotel Booking System', framework:'1. Inventory: room availability per date → reservation table (optimistic locking). 2. Search: Elasticsearch for location + dates. 3. Booking: 2-phase: reserve (hold) → confirm (charge). 4. Race conditions: row-level locking or OCC. 5. Idempotency: booking token prevents double-charge.', mistakes:'Overselling: not locking inventory correctly. Double charge: missing idempotency key. Forgetting cancellation/refund flows.', followup:'Dynamic pricing at scale? Search ranking personalisation?', solved:false },
+  { id:'q14', diff:'medium', company:'Google', title:'Design Google Maps', framework:'1. Map data: tiled rendering at zoom levels (pre-computed PNGs in S3). 2. Routing: Dijkstra/A* on compressed road graph, pre-computed for common paths. 3. Live traffic: GPS data → stream processor → update edge weights. 4. ETA: ML model on historical travel times. 5. Places: separate search index.', mistakes:'Not separating static map rendering from dynamic routing. Routing from scratch for every query.', followup:'Re-routing in real-time? Offline maps? Multi-modal transport?', solved:false },
+  { id:'q15', diff:'medium', company:'Stripe/Razorpay', title:'Design a Payment Processing System', framework:'1. Idempotency: every payment has a unique key — retry-safe. 2. Two-phase: authorise → capture (separate steps). 3. Saga pattern: distributed transaction across payment + inventory + notification. 4. Ledger: append-only, double-entry accounting. 5. Reconciliation: daily batch job comparing internal ledger to bank records.', mistakes:'Mutable ledger (disaster for audits). No idempotency (double charges). Synchronous calls to bank (latency + failure).', followup:'Multi-currency reconciliation? Chargeback handling?', solved:false },
+  { id:'q16', diff:'medium', company:'LinkedIn', title:'Design a Search Autocomplete System', framework:'1. Trie structure: prefix → top-k suggestions by frequency. 2. Scale: sharded tries per prefix range. 3. Freshness: async updates from query logs. 4. Personalisation: per-user history + global popularity blend. 5. Caching: cache top-N prefixes (power law distribution).', mistakes:'Real-time trie updates (too slow). Not handling Unicode/multilingual. No caching of hot prefixes.', followup:'Query suggestions vs entity search? Spelling correction?', solved:false },
+  { id:'q17', diff:'medium', company:'Netflix', title:'Design a Video Streaming Service', framework:'1. Transcoding: multiple bitrates (HLS/DASH ABR). 2. CDN: segments at edge, 99% cache hit ratio. 3. Recommendation: offline collaborative filtering + online bandit for freshness. 4. DRM: content encryption, license server. 5. Bitrate adaptation: client-side logic based on bandwidth probe.', mistakes:'Streaming from origin. Single bitrate. No DRM design. Not handling slow networks.', followup:'Low-latency live streaming? Download for offline?', solved:false },
+  { id:'q18', diff:'medium', company:'Uber', title:'Design Uber Real-Time Location Tracking', framework:'1. Driver → WebSocket/MQTT → location ingestor → Redis Geo. 2. Geo-query: geohash cells around rider. 3. Pub/sub: driver moves → notify affected riders/dispatchers. 4. Consistency: last-write-wins (location is soft state). 5. Scale: 10M concurrent drivers → horizontal WebSocket servers with sticky sessions.', mistakes:'Using REST polling for location (latency + load). Not partitioning by geo region.', followup:'ETA recalculation pipeline? Heatmap for surge pricing?', solved:false },
+  // Hard
+  { id:'q19', diff:'hard', company:'Google/Meta', title:'Design a Distributed Message Queue (Kafka-like)', framework:'1. Log-structured storage: append-only segments per partition. 2. Partitioning: topics split into N partitions, each a sequential log. 3. Consumer groups: each partition consumed by one consumer in group. 4. Replication: ISR (in-sync replicas), leader election via ZooKeeper/Raft. 5. Offset management: consumer commits offset — at-least-once delivery. 6. Compaction: log compaction for KV semantics.', mistakes:'Forgetting ISR for replication guarantees. Consumer offset as application state — must be committed. Underestimating partition count for throughput.', followup:'Exactly-once semantics (idempotent producers + transactions)? Schema evolution?', solved:false },
+  { id:'q20', diff:'hard', company:'Google', title:'Design a Distributed Search Engine', framework:'1. Crawl → parse → inverted index build (offline MapReduce). 2. Index: sharded by document hash, replicated. 3. Query: scatter-gather across index shards, merge top-K. 4. Ranking: PageRank (offline) + BM25 (online) + ML ranker. 5. Freshness: Caffeine-style realtime index for new pages. 6. Serving: 2-tier — small fresh index + large comprehensive index.', mistakes:'Single-shard index. Not separating crawl/index/serve pipelines. Not addressing result merging across shards.', followup:'Personalised ranking? Multi-language? Image/video search?', solved:false },
+  { id:'q21', diff:'hard', company:'Robinhood/NSE', title:'Design a Stock Exchange Order Matching Engine', framework:'1. Order book: in-memory price-priority queue (limit orders). 2. Matching: price-time priority, O(1) for market orders. 3. Persistence: WAL before confirming order. 4. Low latency: single-threaded matching, kernel bypass networking (DPDK). 5. Market data feed: pub/sub to downstream subscribers. 6. Circuit breakers: halt on anomalous price movement.', mistakes:'Distributed matching engine (latency). Not using WAL (can\'t replay). Not considering market data feed separately from matching.', followup:'Co-location? Dark pools? Risk management pre-trade?', solved:false },
+  { id:'q22', diff:'hard', company:'Databricks', title:'Design a Distributed Data Processing System (Spark-like)', framework:'1. DAG scheduler: transform operations into execution plan. 2. Executors: JVM workers, data in-memory partitions. 3. Shuffle: sort-based, exchange partitions across nodes. 4. Fault tolerance: lineage graph → recompute lost partitions. 5. Adaptive query execution: re-optimise at runtime. 6. Storage: HDFS/S3 for spill and output.', mistakes:'Not designing fault tolerance (lineage). Shuffle as synchronous barrier — bottleneck. Not separating driver from executor memory.', followup:'Streaming unification (Structured Streaming)? Delta Lake integration?', solved:false },
+  { id:'q23', diff:'hard', company:'Anthropic/OpenAI', title:'Design an LLM Serving Infrastructure', framework:'1. Model parallelism: tensor parallelism across GPUs for large models. 2. KV cache: attention cache per request, evict LRU. 3. Batching: continuous batching — pack requests for GPU utilisation. 4. Speculative decoding: small draft model speeds up large model. 5. Autoscaling: GPU-aware, warm pools, spot instances with checkpoint. 6. Observability: token throughput, TTFT, TBT metrics.', mistakes:'Per-request GPU allocation. No KV cache sharing. Not batching (GPU utilisation <20%).', followup:'Fine-tuning serving? Multi-modal (vision)? Cost per token optimisation?', solved:false },
+  { id:'q24', diff:'hard', company:'Any', title:'Design a Distributed ID Generator (Snowflake-like)', framework:'1. Structure: 41-bit timestamp + 10-bit node ID + 12-bit sequence. 2. Guarantees: monotonically increasing within node, globally unique. 3. Clock drift: NTP + sequence overflow protection. 4. Scale: each node generates 4096 IDs/ms. 5. Trade-offs vs UUID: sortable, compact, but requires coordination for node IDs.', mistakes:'Clock rollback: IDs go backwards → collisions. Node ID reuse without decommission. Not handling sequence overflow.', followup:'How Twitter\'s Snowflake handles leap seconds? Segment-based allocation?', solved:false },
+  { id:'q25', diff:'hard', company:'Google', title:'Design Google Bigtable / Wide-Column Store', framework:'1. Tablet: sorted key-value range, served by one tablet server. 2. LSM tree: writes to memtable → SSTable files. 3. Compaction: merge SSTables, GC deleted/old versions. 4. Master: assigns tablets to servers, handles splits/merges. 5. Chubby: distributed lock service for master election. 6. Bloom filters: avoid disk reads for non-existent keys.', mistakes:'Not separating master (metadata) from tablet servers (data). Forgetting compaction strategy impact on read/write amplification.', followup:'How Cloud Bigtable handles automatic splitting? HBase vs Bigtable?', solved:false },
+  // Nightmare
+  { id:'q26', diff:'nightmare', company:'Stripe', title:'Distributed Tracing in Payment Systems with Regulatory Audit Trail', framework:'1. Correlation ID: propagated through all services via headers (W3C TraceContext). 2. Span collection: OpenTelemetry SDK → collector → backend (Jaeger/Honeycomb). 3. Financial requirement: ALL traces must be durable (not sampled!) for audit. 4. Solution: dual path — sampled traces to Jaeger for debugging, full event log to append-only audit store. 5. PCI-DSS: mask card numbers in spans. 6. Retention: 7-year audit log, 90-day trace retention.', mistakes:'Sampling distributed traces for payments (regulator sees gaps). Logging raw PAN data. Not correlating trace ID with audit log entry.', followup:'DPDP compliance for trace data? Multi-region trace correlation?', solved:false },
+  { id:'q27', diff:'nightmare', company:'Any', title:'Rebalancing a Sharded Database Under Byzantine Failures', framework:'1. Byzantine = nodes lie, not just fail. 2. Use PBFT or Tendermint for consensus with Byzantine actors. 3. Rebalancing: quorum-based migration — must confirm from 2f+1 nodes. 4. Validity checks: compare checksums from multiple replicas before accepting rebalance. 5. Multi-phase: 1) Copy data to new shard 2) Verify quorum of checksums 3) Atomic metadata update 4) Remove from old shard. 6. Key insight: never trust a single node\'s acknowledgement.', mistakes:'Treating Byzantine as crash-stop failure (Raft is not Byzantine tolerant). Rebalancing without quorum verification. No checksum validation.', followup:'Performance of BFT consensus vs crash-stop? How Ethereum PoS handles this?', solved:false },
+  { id:'q28', diff:'nightmare', company:'Google', title:'Design a Globally Consistent Distributed Database (Spanner-like)', framework:'1. External consistency: transactions appear to execute at a single point in time globally. 2. TrueTime API: bounded clock uncertainty [earliest, latest] — wait out the uncertainty window before commit. 3. Paxos groups per tablet: leader handles reads/writes with leadership lease. 4. 2PC across Paxos groups: coordinator commits only after all participants confirm. 5. Read timestamps: can serve stale reads without coordination. 6. Physical colocation: Raft group members in same region + cross-region replication.', mistakes:'Assuming NTP is sufficient (clock drift breaks external consistency). Not waiting out TrueTime uncertainty. Confusing Paxos leadership with full coordination.', followup:'Latency cost of global consistency? When to use Spanner vs Bigtable?', solved:false },
+  { id:'q29', diff:'nightmare', company:'Anthropic', title:'Design a Real-Time Collaborative Document Editor (Google Docs-like)', framework:'1. OT (Operational Transformation) or CRDT for conflict resolution. 2. CRDT preferred: each character has unique ID, tombstones for deletes, merge is commutative. 3. Architecture: operations go to server → broadcast to all clients → apply CRDT merge. 4. Presence: WebSocket channel per document, ephemeral cursor positions. 5. Persistence: operation log in append-only store + periodic snapshots. 6. Offline: buffer ops locally, sync on reconnect via vector clocks.', mistakes:'Using server-side locking (defeats real-time). OT is complex and hard to implement correctly. Not handling network partition (offline editing).', followup:'Permission model for sharing? How to handle 1000 concurrent editors?', solved:false },
+  { id:'q30', diff:'nightmare', company:'Any BFSI', title:'Design India\'s UPI Payment System for 10B Transactions/Month', framework:'1. NPCI as central switch: routes transaction between payer PSP and payee PSP. 2. 24x7x365: active-active multi-region, no maintenance window. 3. Idempotency: every transaction has UPI Ref ID — retry-safe at all layers. 4. VPA resolution: UPI address → actual bank account (cached at PSPs). 5. T+0 settlement: IMPS-based real-time gross settlement. 6. Fraud: real-time ML scoring <100ms, hard block list + soft risk scoring. 7. Regulatory: RBI mandates, data localisation (data must stay in India). 8. Scale: 3300 TPS peak — horizontal scaling with circuit breakers between PSPs.', mistakes:'Not designing for partial failures between NPCI and PSPs. Missing idempotency at every layer. Treating settlement as batch (it\'s real-time). Not designing for regulatory data residency.', followup:'Cross-border UPI? Offline UPI (sound-based)? Dispute resolution system?', solved:false },
+];
+
+const CALENDAR_DATA = [
+  { week:1, mon:{pillar:'scalability', topic:'Why I stopped "using" CAP theorem and started reasoning about it', hook:'Most engineers can recite CAP theorem. Almost none can use it to make a real trade-off. Here\'s how to shift from memorisation to decision-making...'}, fri:{pillar:'interview', topic:'The 3 questions I ask at the start of every system design interview', hook:'Before drawing a single box, I ask three questions. They signal "senior engineer" and give me everything I need to structure the next 45 minutes...'} },
+  { week:2, mon:{pillar:'scalability', topic:'B-Trees vs LSM-Trees: which one is right for your startup?', hook:'Your choice of storage engine determines your latency ceiling at scale. Here\'s the decision framework I use when evaluating startup databases...'}, fri:{pillar:'interview', topic:'Why "add a cache" is the wrong answer to almost every scaling question', hook:'I\'ve interviewed 50+ engineers in the last 2 years. The most common anti-pattern: reaching for Redis before understanding the read pattern...'} },
+  { week:3, mon:{pillar:'scalability', topic:'Transactions in distributed systems: the lies we tell ourselves about ACID', hook:'True ACID transactions in a distributed system are expensive. Most engineers don\'t know the exact trade-off they\'re making. Let\'s fix that...'}, fri:{pillar:'interview', topic:'How I practice system design (and why LeetCode-style grinding doesn\'t work)', hook:'System design skill doesn\'t come from solving 100 problems. It comes from deeply understanding 10 problems. Here\'s my practice framework...'} },
+  { week:4, mon:{pillar:'scalability', topic:'The Saga pattern: how we handle distributed transactions in fintech', hook:'In my 8 years building payment systems, I\'ve seen 3 approaches to distributed transactions. Only one works at scale without making you miserable...'}, fri:{pillar:'interview', topic:'What "clear hire" looks like in a system design interview (vs just getting by)', hook:'I graded 100+ system design interviews. The difference between "hired" and "strong hire" is rarely about knowing more — it\'s about one specific behaviour...'} },
+  { week:5, mon:{pillar:'scalability', topic:'Event sourcing in production: what the blog posts don\'t tell you', hook:'Event sourcing sounds elegant in theory. In practice, there are 5 sharp edges that will cut you. Here\'s what 3 years of production event sourcing taught me...'}, fri:{pillar:'interview', topic:'The feed system interview question has ONE trick that trips up 90% of engineers', hook:'Fanout on write vs fanout on read. Most candidates know the trade-off. But they get the celebrity/influencer case wrong every single time. Here\'s why...'} },
+  { week:6, mon:{pillar:'scalability', topic:'Sharding: the decision you can\'t easily undo (and how to get it right)', hook:'I\'ve seen two companies migrate sharding strategies in production. It\'s hell. Here\'s how to choose your sharding key correctly the first time...'}, fri:{pillar:'cto', topic:'The 3 architectural mistakes I see every BFSI startup make in year one', hook:'After reviewing 8 fintech startup architectures, the same three mistakes appear every time. They\'re all avoidable, and all become very expensive at Series A...'} },
+  { week:7, mon:{pillar:'scalability', topic:'Consistent hashing: from the algorithm to production (Dynamo\'s actual approach)', hook:'Consistent hashing is one of those concepts that\'s easy to describe and hard to implement correctly. Here\'s how Amazon Dynamo actually does it...'}, fri:{pillar:'interview', topic:'My biggest system design interview mistake — and what it taught me', hook:'I went 90 minutes designing a beautiful distributed system for a problem that only needed a single PostgreSQL instance. Here\'s how I learned to scope correctly...'} },
+  { week:8, mon:{pillar:'scalability', topic:'Designing idempotent payment APIs: the exact pattern we use in production', hook:'Every payment system I\'ve worked on has had a double-charge incident. Not because engineers are careless, but because idempotency is subtle. Here\'s the full pattern...'}, fri:{pillar:'interview', topic:'Payment system design: the 4 things every interviewer wants to see', hook:'I\'ve asked this question 20 times as an interviewer and answered it 5 times as a candidate. Here\'s the exact rubric...'} },
+  { week:9, mon:{pillar:'scalability', topic:'How I\'d design UPI for 10B transactions/month (with actual numbers)', hook:'UPI processes 3300 TPS at peak. Let\'s design this from scratch with real scale numbers, NPCI as the central switch, and regulatory constraints built in...'}, fri:{pillar:'cto', topic:'When your $1M startup needs a new database (and when it absolutely doesn\'t)', hook:'The most expensive architectural mistake a startup can make is migrating databases too early — or too late. Here\'s the exact signal to watch for...'} },
+  { week:10, mon:{pillar:'scalability', topic:'Distributed tracing for payment systems: audit trail meets observability', hook:'Most observability guides assume you can sample traces. In payments, you can\'t. Here\'s how to design a dual-path system that satisfies both ops and compliance...'}, fri:{pillar:'interview', topic:'The "nightmare" system design questions that separate Staff from Senior', hook:'There\'s a class of system design question that most engineers aren\'t prepared for: Byzantine failures, global consistency, real-time + compliance. Here\'s how to approach them...'} },
+  { week:11, mon:{pillar:'scalability', topic:'ML infrastructure at scale: how Anthropic serves trillion-token workloads', hook:'Serving LLMs is a different kind of distributed systems problem. KV cache, tensor parallelism, continuous batching — here\'s what I\'ve learned building AI backends...'}, fri:{pillar:'interview', topic:'Google Spanner explained in 5 minutes (for system design interviews)', hook:'TrueTime API, external consistency, Paxos groups. Most engineers can\'t explain why Spanner needs GPS clocks. Here\'s the intuition you need...'} },
+  { week:12, mon:{pillar:'scalability', topic:'The outbox pattern: solving the dual-write problem once and for all', hook:'Every microservices system eventually has this bug: the DB write succeeds, the event doesn\'t publish. Or vice versa. The outbox pattern fixes this permanently...'}, fri:{pillar:'cto', topic:'DPDP Act for startup CTOs: what your architecture must do right now', hook:'India\'s DPDP Act is not a future problem. It\'s a present design constraint. Here\'s what it means for your data store, your audit trail, and your consent management...'} },
+];
+
+const MENTAL_MODELS = [
+  { decision: 'What\'s the core bottleneck?', yes: 'Read-heavy (10:1+ ratio)', no: 'Write-heavy or balanced' },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = JSON.parse(localStorage.getItem('sdm_state') || '{}');
+function save() { localStorage.setItem('sdm_state', JSON.stringify(state)); updateProgress(); }
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function nav(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event && document.querySelectorAll('nav a').forEach(a => { if(a.getAttribute('onclick') && a.getAttribute('onclick').includes("'"+id+"'")) a.classList.add('active'); });
+}
+
+// ============================================================
+// RENDER WEEKS
+// ============================================================
+function phaseColor(p) {
+  return ['','#10b981','#4f8ef7','#f59e0b','#7c3aed'][p];
+}
+function phaseLabel(p) {
+  return ['','Foundation','Interview','Authority','Fractional CTO'][p];
+}
+
+function renderWeeks(phase, containerId) {
+  const weeks = WEEKS.filter(w => w.phase === phase);
+  const container = document.getElementById(containerId);
+  container.innerHTML = weeks.map((w, i) => {
+    const done = state[w.id] === true;
+    return `<div class="week-card ${done ? 'done' : ''}" id="wc-${w.id}">
+      <div class="week-header">
+        <div>
+          <span class="week-num">Week ${weekNum(w.id)}</span>
+          <span class="phase-label" style="background:${phaseColor(w.phase)}22;color:${phaseColor(w.phase)};margin-left:8px">${phaseLabel(w.phase)}</span>
+        </div>
+        <div class="week-check ${done ? 'checked' : ''}" onclick="toggleWeek('${w.id}')">${done ? '✓' : ''}</div>
+      </div>
+      <div class="week-title">${w.title}</div>
+      <ul class="week-tasks">${w.tasks.map(t => `<li>${t}</li>`).join('')}</ul>
+    </div>`;
+  }).join('');
+}
+
+function weekNum(id) {
+  const map = {w1:1,w2:2,w3:3,w4:4,w5:5,w6:6,w7:7,w8:8,w9:9,w10:10,w11:11,w12:12,w13:13,w14:14,w15:15,w16:16,w17:17,w18:18,w19:19,w20:20,w21:21,w22:22,w23:23,w24:24};
+  return map[id] || '?';
+}
+
+function toggleWeek(id) {
+  state[id] = !state[id];
+  save();
+  renderAllWeeks();
+}
+
+function renderAllWeeks() {
+  renderWeeks(1, 'phase1-weeks');
+  renderWeeks(2, 'phase2-weeks');
+  renderWeeks(3, 'phase3-weeks');
+  renderWeeks(4, 'phase4-weeks');
+}
+
+// ============================================================
+// QUESTIONS
+// ============================================================
+function renderQuestions(filter) {
+  const list = document.getElementById('questions-list');
+  const qs = filter === 'all' ? QUESTIONS : QUESTIONS.filter(q => q.diff === filter);
+  list.innerHTML = qs.map((q, i) => `
+    <div class="q-card ${state['q_'+q.id] ? 'solved' : ''}" id="qcard-${q.id}" onclick="toggleQ('${q.id}')">
+      <div class="q-header">
+        <span class="q-num">#${QUESTIONS.indexOf(q)+1}</span>
+        <span class="q-title">${q.title}</span>
+        <span class="diff-badge diff-${q.diff}">${q.diff.charAt(0).toUpperCase()+q.diff.slice(1)}</span>
+        <span class="company-tag">${q.company}</span>
+        <div class="week-check ${state['q_'+q.id] ? 'checked' : ''}" onclick="event.stopPropagation();markQ('${q.id}')" style="margin-left:8px">${state['q_'+q.id] ? '✓' : ''}</div>
+      </div>
+      <div class="q-body">
+        <h4>Solution Framework</h4>
+        <p>${q.framework}</p>
+        <h4>Common Mistakes</h4>
+        <p>${q.mistakes}</p>
+        <h4>Advanced Follow-ups</h4>
+        <p>${q.followup}</p>
+      </div>
+    </div>`).join('');
+}
+
+function filterQ(f, btn) {
+  document.querySelectorAll('.filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderQuestions(f);
+}
+
+function toggleQ(id) {
+  const card = document.getElementById('qcard-' + id);
+  card.classList.toggle('open');
+}
+
+function markQ(id) {
+  state['q_'+id] = !state['q_'+id];
+  save();
+  renderQuestions('all');
+}
+
+// ============================================================
+// MENTAL MODEL
+// ============================================================
+function renderMentalModel() {
+  const c = document.getElementById('mental-content');
+  c.innerHTML = `
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div class="tree-node decision" style="max-width:400px;margin:0 auto">🎯 System Design Prompt Received</div>
+    <div style="text-align:center;color:var(--text3);font-size:12px">↓ Step 1: Clarify Requirements (2 min)</div>
+
+    <div class="decision-branch">
+      <div>
+        <div class="branch-label" style="color:var(--green)">Read-Heavy (10:1+)</div>
+        <div class="tree-node decision">Cache-first architecture</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <div class="tree-node result">Redis/Memcached hot layer<br><small style="color:var(--text3)">+ CDN for static content</small></div>
+          <div class="tree-node result">Read replicas for DB<br><small style="color:var(--text3)">Leader for writes, replicas for reads</small></div>
+          <div class="tree-node warning">⚠️ Cache invalidation strategy<br><small style="color:var(--text3)">TTL vs event-driven invalidation</small></div>
+        </div>
+      </div>
+      <div>
+        <div class="branch-label" style="color:var(--accent)">Write-Heavy</div>
+        <div class="tree-node decision">Write path optimisation</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <div class="tree-node result">LSM-tree storage engine<br><small style="color:var(--text3)">Cassandra, RocksDB, DynamoDB</small></div>
+          <div class="tree-node result">Message queue buffer<br><small style="color:var(--text3)">Kafka/SQS decouples producers/consumers</small></div>
+          <div class="tree-node warning">⚠️ Idempotency keys required<br><small style="color:var(--text3)">Prevent duplicate writes</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin:8px 0"></div>
+    <div style="text-align:center;color:var(--text3);font-size:12px">↓ Step 2: Consistency Requirements</div>
+
+    <div class="decision-branch">
+      <div>
+        <div class="branch-label" style="color:var(--red)">Strong Consistency Required</div>
+        <div class="tree-node decision">Financial / Inventory / Auth</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <div class="tree-node result">PostgreSQL + ACID transactions<br><small style="color:var(--text3)">Linearisable reads</small></div>
+          <div class="tree-node result">Saga pattern for distributed txns<br><small style="color:var(--text3)">Compensating transactions</small></div>
+          <div class="tree-node warning">⚠️ Latency cost: ~10-50ms extra<br><small style="color:var(--text3)">Worth it for correctness</small></div>
+        </div>
+      </div>
+      <div>
+        <div class="branch-label" style="color:var(--yellow)">Eventual Consistency OK</div>
+        <div class="tree-node decision">Social / Analytics / Search</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <div class="tree-node result">DynamoDB / Cassandra<br><small style="color:var(--text3)">Tune R + W &gt; N for stronger</small></div>
+          <div class="tree-node result">Event-driven updates<br><small style="color:var(--text3)">Kafka → downstream projections</small></div>
+          <div class="tree-node warning">⚠️ Conflict resolution strategy<br><small style="color:var(--text3)">LWW vs CRDT vs vector clocks</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin:8px 0"></div>
+    <div style="text-align:center;color:var(--text3);font-size:12px">↓ Step 3: Scale Estimation (back-of-envelope)</div>
+
+    <div class="grid grid-3" style="gap:10px">
+      <div class="tree-node result" style="text-align:left">
+        <strong>Users → QPS</strong><br>
+        <small style="color:var(--text2)">100M DAU × 10 actions/day ÷ 86400s = <strong>~11K QPS</strong></small>
+      </div>
+      <div class="tree-node result" style="text-align:left">
+        <strong>Storage</strong><br>
+        <small style="color:var(--text2)">100M users × 100 bytes/record = <strong>10 GB metadata</strong><br>Add 100x for time-series: 1 TB</small>
+      </div>
+      <div class="tree-node result" style="text-align:left">
+        <strong>Bandwidth</strong><br>
+        <small style="color:var(--text2)">11K QPS × 1KB avg = <strong>11 MB/s inbound</strong><br>Fan-out ratio determines outbound</small>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin:8px 0"></div>
+    <div style="text-align:center;color:var(--text3);font-size:12px">↓ Step 4: Component Selection</div>
+
+    <div class="card">
+      <h3 style="margin-bottom:16px">Component Decision Matrix</h3>
+      <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead>
+          <tr style="border-bottom:1px solid var(--border);color:var(--text3)">
+            <th style="padding:10px;text-align:left">Need</th>
+            <th style="padding:10px;text-align:left">Choose</th>
+            <th style="padding:10px;text-align:left">Why</th>
+            <th style="padding:10px;text-align:left">Anti-pattern</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${[
+            ['Hot cache','Redis','Sub-ms reads, data structures','Memcached (no persistence)'],
+            ['Relational data','PostgreSQL','ACID, complex queries','MySQL (inferior JSON, partitioning)'],
+            ['Time-series','TimescaleDB / InfluxDB','Hypertable auto-partitioning','PostgreSQL raw (partition manually = pain)'],
+            ['Event streaming','Kafka','Durable, replayable log','RabbitMQ (no replay, AMQP overhead)'],
+            ['Object storage','S3-compatible','Cheap, durable, globally distributed','DB BLOB storage (kills DB perf)'],
+            ['Search','Elasticsearch','Full-text, faceted, geo queries','LIKE queries in SQL (no scale)'],
+            ['Graph data','Neo4j / DynamoDB adjacency list','Traversals efficient','JOIN chains in SQL (N+1 death)'],
+            ['Geo queries','PostGIS / Redis GEO / S2 cells','Native geo index','Lat/lon range queries in SQL (slow)'],
+            ['Task queue','SQS + Lambda / Temporal','DLQ, retry, exactly-once','Cron jobs / Redis queue (fragile)'],
+            ['Service mesh','Envoy + Istio','mTLS, retries, circuit breaking','DIY retry logic everywhere'],
+          ].map(([n,c,w,a]) => `<tr style="border-bottom:1px solid rgba(42,58,92,.4)">
+            <td style="padding:10px;font-weight:600;color:var(--text)">${n}</td>
+            <td style="padding:10px;color:var(--accent)">${c}</td>
+            <td style="padding:10px;color:var(--text2)">${w}</td>
+            <td style="padding:10px;color:var(--red)">${a}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div style="height:1px;background:var(--border);margin:8px 0"></div>
+    <div style="text-align:center;color:var(--text3);font-size:12px">↓ Step 5: Anti-Patterns Decoder</div>
+
+    <div class="grid grid-2" style="gap:12px">
+      ${[
+        ['🔴 N+1 Query Problem','Calling DB in a loop. Fix: batch query or JOIN','Critical'],
+        ['🔴 Synchronous Calls to External Services','Your SLA = their SLA × your calls. Fix: async + circuit breaker','Critical'],
+        ['🟡 Premature Sharding','Shard after you\'ve exhausted vertical scaling. Fix: benchmark first','High'],
+        ['🟡 Cache Everything','Cached stale financial data = compliance nightmare. Fix: TTL strategy by data type','High'],
+        ['🟠 Monolithic Event Handler','One consumer for all event types = single point of failure. Fix: consumer groups per type','Medium'],
+        ['🟠 Missing Idempotency','Any retry-able operation without idempotency key = double execution. Fix: always add idempotency token','Medium'],
+        ['🟡 Distributed Monolith','Services sharing a DB = you got the worst of both worlds. Fix: one DB per service','High'],
+        ['🔴 No Circuit Breakers','Cascade failure from one slow dependency. Fix: Hystrix/Resilience4j on all outbound calls','Critical'],
+      ].map(([t,d,s]) => `<div class="card card-sm">
+        <div style="font-size:13px;font-weight:600;margin-bottom:6px">${t}</div>
+        <div style="font-size:12px;color:var(--text2)">${d}</div>
+        <span class="severity ${s==='Critical'?'sev-critical':s==='High'?'sev-high':'sev-med'}" style="margin-top:8px;display:inline-block">${s}</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ============================================================
+// CONTENT CALENDAR
+// ============================================================
+function pillarColor(p) {
+  return {scalability:'var(--accent)',interview:'var(--yellow)',cto:'var(--accent2)'}[p];
+}
+function pillarBg(p) {
+  return {scalability:'rgba(79,142,247,.15)',interview:'rgba(245,158,11,.15)',cto:'rgba(124,58,237,.15)'}[p];
+}
+function pillarName(p) {
+  return {scalability:'⚙️ Scalability Patterns',interview:'🎯 Interview Lessons',cto:'🏦 CTO Notes'}[p];
+}
+
+function renderCalendar(filter) {
+  const list = document.getElementById('calendar-list');
+  list.innerHTML = CALENDAR_DATA.map(w => `
+    <div class="cal-week" data-mon="${w.mon.pillar}" data-fri="${w.fri.pillar}">
+      <div class="cal-week-header">
+        <span class="cal-week-num">Week ${w.week}</span>
+        <span class="badge badge-blue">2 posts</span>
+      </div>
+      <div class="cal-posts">
+        <div class="cal-post">
+          <div class="day">📝 Monday · 800 words</div>
+          <div class="topic">${w.mon.topic}</div>
+          <div class="hook">${w.mon.hook}</div>
+          <span class="pillar" style="background:${pillarBg(w.mon.pillar)};color:${pillarColor(w.mon.pillar)}">${pillarName(w.mon.pillar)}</span>
+        </div>
+        <div class="cal-post">
+          <div class="day">💡 Friday · 300 words</div>
+          <div class="topic">${w.fri.topic}</div>
+          <div class="hook">${w.fri.hook}</div>
+          <span class="pillar" style="background:${pillarBg(w.fri.pillar)};color:${pillarColor(w.fri.pillar)}">${pillarName(w.fri.pillar)}</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterCal(f, btn) {
+  document.querySelectorAll('.filters .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.cal-week').forEach(w => {
+    if(f === 'all') { w.style.display = ''; return; }
+    const show = w.dataset.mon === f || w.dataset.fri === f;
+    w.style.display = show ? '' : 'none';
+  });
+}
+
+// ============================================================
+// CTO TOOLKIT
+// ============================================================
+let activeToolkitTab = 'audit';
+function switchTab(tab, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  activeToolkitTab = tab;
+  renderToolkit();
+}
+
+const AUDIT_ITEMS = [
+  { title:'Single point of failure in payment path', desc:'Is there any component where failure = no transactions?', sev:'Critical', id:'a1' },
+  { title:'No circuit breakers on external calls', desc:'Cascade failure risk from third-party PSP/bank downtime', sev:'Critical', id:'a2' },
+  { title:'Mutable financial ledger', desc:'Ledger rows that can be UPDATE-d (audit trail risk)', sev:'Critical', id:'a3' },
+  { title:'Missing idempotency on payment endpoints', desc:'Retries can cause double charges', sev:'Critical', id:'a4' },
+  { title:'No DLQ for async processing', desc:'Failed events silently dropped', sev:'High', id:'a5' },
+  { title:'Database shared across services', desc:'Distributed monolith — services coupling via DB', sev:'High', id:'a6' },
+  { title:'Synchronous fan-out to multiple services', desc:'P99 = slowest downstream', sev:'High', id:'a7' },
+  { title:'No distributed tracing', desc:'Can\'t debug cross-service failures', sev:'High', id:'a8' },
+  { title:'Manual scaling (no autoscale)', desc:'On-call engineers manually scaling on traffic spikes', sev:'Medium', id:'a9' },
+  { title:'No cache warming strategy', desc:'Cold cache after deploy = DB overload spike', sev:'Medium', id:'a10' },
+  { title:'N+1 query patterns in hot path', desc:'List API loading related data in loop', sev:'Medium', id:'a11' },
+  { title:'No rate limiting on public APIs', desc:'Vulnerable to DDoS and credential stuffing', sev:'High', id:'a12' },
+];
+
+const GROWTH_STAGES = [
+  { stage:'$0 → $1M', infra:'Single-region PostgreSQL, monolith, manual deploys', trigger:'DB CPU > 70% sustained, or deploy frequency > 5/day', pivot:'Add Redis cache, CI/CD pipeline, basic monitoring (Datadog)', cost:'~$2K-5K/month infra' },
+  { stage:'$1M → $10M', infra:'Caching layer, background jobs, first services split', trigger:'Single DB can\'t handle write load, or team > 10 engineers', pivot:'Extract payment service, add message queue (SQS), read replicas', cost:'~$10K-30K/month infra' },
+  { stage:'$10M → $50M', infra:'Multi-service, managed Kubernetes, data warehouse', trigger:'Cross-service data queries slow, compliance audit upcoming', pivot:'Event-driven architecture, separate OLAP (BigQuery/Redshift), observability stack', cost:'~$50K-150K/month infra' },
+  { stage:'$50M → $100M+', infra:'Multi-region, domain-driven services, platform engineering team', trigger:'Regional outage impacts all users, hiring blocked by infra complexity', pivot:'Active-active multi-region, platform as a product, SRE team, chaos engineering', cost:'~$150K-500K+/month infra' },
+];
+
+const BFSI_CHECKLIST = [
+  { title:'Data residency: all user data in India', desc:'RBI and DPDP mandate data localisation for payment data', sev:'Critical', id:'b1' },
+  { title:'PCI-DSS compliant card data handling', desc:'No raw PANs in logs, encryption at rest and in transit', sev:'Critical', id:'b2' },
+  { title:'Immutable audit trail (7-year retention)', desc:'Append-only transaction log, tamper-evident storage', sev:'Critical', id:'b3' },
+  { title:'Consent management system (DPDP)', desc:'User consent recorded, verifiable, revocable', sev:'Critical', id:'b4' },
+  { title:'Real-time fraud scoring (<100ms)', desc:'ML model scoring every transaction before processing', sev:'High', id:'b5' },
+  { title:'Reconciliation with banking partners', desc:'Daily T+0 reconciliation against bank statements', sev:'High', id:'b6' },
+  { title:'Disaster recovery plan (RTO/RPO defined)', desc:'RTO < 4h, RPO < 15min for payment systems', sev:'High', id:'b7' },
+  { title:'Penetration testing (annual minimum)', desc:'CERT-In empanelled auditor required for RBI compliance', sev:'High', id:'b8' },
+  { title:'API security: HMAC webhook signatures', desc:'All outbound webhooks signed, all inbound verified', sev:'Medium', id:'b9' },
+  { title:'Velocity checks on transactions', desc:'Block unusual transaction patterns per user/merchant', sev:'Medium', id:'b10' },
+];
+
+function renderToolkit() {
+  const c = document.getElementById('toolkit-content');
+  if(activeToolkitTab === 'audit') {
+    c.innerHTML = `<div class="toolkit-section">
+      <h3>Architecture Audit Checklist — BFSI/Fintech</h3>
+      ${AUDIT_ITEMS.map(item => `
+        <div class="checklist-item">
+          <div class="check-box ${state['audit_'+item.id] ? 'checked' : ''}" onclick="toggleCheck('audit_${item.id}')">${state['audit_'+item.id] ? '✓' : ''}</div>
+          <div class="ci-text">
+            <div class="ci-title">${item.title}</div>
+            <div class="ci-desc">${item.desc}</div>
+          </div>
+          <span class="severity sev-${item.sev === 'Critical' ? 'critical' : item.sev === 'High' ? 'high' : 'med'}">${item.sev}</span>
+        </div>`).join('')}
+    </div>`;
+  } else if(activeToolkitTab === 'growth') {
+    c.innerHTML = `<div>
+      ${GROWTH_STAGES.map(g => `<div class="card" style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+          <span class="badge badge-purple" style="font-size:13px;padding:6px 14px">${g.stage}</span>
+          <span style="font-size:12px;color:var(--text2)">${g.cost}</span>
+        </div>
+        <div class="grid grid-3" style="gap:12px">
+          <div><div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Current State</div><p style="font-size:13px;color:var(--text2)">${g.infra}</p></div>
+          <div><div style="font-size:11px;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">🚨 Trigger Signal</div><p style="font-size:13px;color:var(--text2)">${g.trigger}</p></div>
+          <div><div style="font-size:11px;color:var(--green);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">✅ Pivot Plan</div><p style="font-size:13px;color:var(--text2)">${g.pivot}</p></div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+  } else if(activeToolkitTab === 'bfsi') {
+    c.innerHTML = `<div class="toolkit-section">
+      <h3>BFSI Regulatory Compliance Checklist</h3>
+      ${BFSI_CHECKLIST.map(item => `
+        <div class="checklist-item">
+          <div class="check-box ${state['bfsi_'+item.id] ? 'checked' : ''}" onclick="toggleCheck('bfsi_${item.id}')">${state['bfsi_'+item.id] ? '✓' : ''}</div>
+          <div class="ci-text">
+            <div class="ci-title">${item.title}</div>
+            <div class="ci-desc">${item.desc}</div>
+          </div>
+          <span class="severity sev-${item.sev === 'Critical' ? 'critical' : item.sev === 'High' ? 'high' : 'med'}">${item.sev}</span>
+        </div>`).join('')}
+    </div>`;
+  } else {
+    c.innerHTML = `<div>
+      <div class="grid grid-3" style="gap:20px;margin-bottom:24px">
+        <div class="pricing-card">
+          <div class="pricing-tier" style="color:var(--text3)">Starter</div>
+          <div class="pricing-price">$500<span>/hr</span></div>
+          <ul class="pricing-features">
+            <li>2-hour architecture review</li>
+            <li>Written findings report</li>
+            <li>Top 5 risk priorities</li>
+            <li>30-min async Q&A</li>
+          </ul>
+          <div style="font-size:12px;color:var(--text3);margin-top:8px">Best for: Pre-Series A validation</div>
+        </div>
+        <div class="pricing-card featured">
+          <div class="pricing-tier" style="color:var(--accent)">Growth Partner ⭐</div>
+          <div class="pricing-price" style="color:var(--accent)">$8K<span>/month</span></div>
+          <ul class="pricing-features">
+            <li>10 hrs/month embedded</li>
+            <li>Architecture decision ownership</li>
+            <li>Team reviews + mentorship</li>
+            <li>On-call escalation path</li>
+            <li>Quarterly tech roadmap</li>
+          </ul>
+          <div style="font-size:12px;color:var(--text3);margin-top:8px">Best for: Series A–B scaling</div>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-tier" style="color:var(--accent2)">Strategic Advisor</div>
+          <div class="pricing-price" style="color:var(--accent2)">$3K<span>/month</span></div>
+          <ul class="pricing-features">
+            <li>4 hrs/month advisory calls</li>
+            <li>Async Slack access</li>
+            <li>Architecture review on PRs</li>
+            <li>Investor tech due diligence</li>
+          </ul>
+          <div style="font-size:12px;color:var(--text3);margin-top:8px">Best for: Seed/Pre-A</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Positioning Statement for Consulting Sales</h3>
+        <div style="font-size:14px;color:var(--text2);line-height:1.7;margin-top:8px">
+          "I work with BFSI/fintech founders at the exact moment where architectural debt becomes existential — when you've just signed your first enterprise customer and your system was designed for 100 users. I bring 8 years of payment systems, distributed architecture, and regulatory compliance experience. Unlike generalist consultants, I can read your stack, identify the 3 things that will kill you in 12 months, and build the migration plan that doesn't require a rewrite. My clients typically avoid a 6-month engineering pause to fix foundational issues — saving ₹2–5Cr in engineering cost and 6+ months of growth runway."
+        </div>
+      </div>
+    </div>`;
+  }
+}
+
+function toggleCheck(id) {
+  state[id] = !state[id];
+  save();
+  renderToolkit();
+}
+
+// ============================================================
+// PROGRESS
+// ============================================================
+function updateProgress() {
+  const totalWeeks = WEEKS.length;
+  const doneWeeks = WEEKS.filter(w => state[w.id]).length;
+  const totalQ = QUESTIONS.length;
+  const doneQ = QUESTIONS.filter(q => state['q_'+q.id]).length;
+
+  const globalPct = Math.round((doneWeeks / totalWeeks) * 100);
+  document.getElementById('globalProg').style.width = globalPct + '%';
+  document.getElementById('globalPct').textContent = globalPct + '% complete';
+
+  document.getElementById('stat-weeks').textContent = doneWeeks + '/' + totalWeeks;
+  document.getElementById('stat-qs').textContent = doneQ + '/' + totalQ;
+
+  const totalChecks = AUDIT_ITEMS.length + BFSI_CHECKLIST.length;
+  const doneChecks = AUDIT_ITEMS.filter(i => state['audit_'+i.id]).length + BFSI_CHECKLIST.filter(i => state['bfsi_'+i.id]).length;
+  document.getElementById('stat-checks').textContent = Math.round((doneChecks/totalChecks)*100) + '%';
+
+  const p1 = WEEKS.filter(w => w.phase===1);
+  const p2 = WEEKS.filter(w => w.phase===2);
+  const p3 = WEEKS.filter(w => w.phase===3);
+  const p4 = WEEKS.filter(w => w.phase===4);
+  const pct = (arr) => Math.round(arr.filter(w => state[w.id]).length / arr.length * 100);
+
+  ['p1','p2','p3','p4'].forEach((p,i) => {
+    const arr = [p1,p2,p3,p4][i];
+    const v = pct(arr);
+    document.getElementById(p+'bar').style.width = v + '%';
+    document.getElementById(p+'pct').textContent = v + '%';
+  });
+}
+
+// ============================================================
+// INIT
+// ============================================================
+renderAllWeeks();
+renderQuestions('all');
+renderMentalModel();
+renderCalendar('all');
+renderToolkit();
+updateProgress();
+</script>
+</body>
+</html>
