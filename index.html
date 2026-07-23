@@ -9,7 +9,14 @@
 <meta property="og:description" content="Senior software engineer building production agentic AI systems for regulated fintech across GCC, UK, and India. Toptal Top 3%. Banking-grade delivery.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://devesrawat.github.io/my-portfolio/">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="https://devesrawat.github.io/my-portfolio/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://devesrawat.github.io/my-portfolio/assets/og-image.png">
+<meta name="theme-color" content="#0a1220">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -58,6 +65,28 @@
     overflow-x: hidden;
   }
 
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* Film-grain texture for depth — subtle, premium finish */
+  #grain {
+    position: fixed; inset: 0; pointer-events: none; z-index: 500;
+    opacity: 0.045; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   /* Scroll progress */
   #progress {
     position: fixed; top: 0; left: 0; right: 0; height: 2px;
@@ -104,6 +133,20 @@
     text-decoration: none; transition: all 0.2s;
   }
   .nav-cta:hover { background: var(--accent2); transform: translateY(-1px); }
+
+  .nav-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 5px;
+    width: 32px; height: 32px; background: none; border: none; cursor: pointer;
+    padding: 0;
+  }
+  .nav-toggle span {
+    display: block; width: 100%; height: 2px; background: var(--text);
+    border-radius: 2px; transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  .nav-cta-mobile { display: none; }
 
   /* === HERO === */
   .hero {
@@ -188,6 +231,21 @@
     color: var(--text2); transition: all 0.2s;
   }
   .hero-tag:hover { border-color: var(--accent); color: var(--accent); }
+
+  .scroll-cue {
+    position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    z-index: 2; color: var(--text3); text-decoration: none;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em;
+    text-transform: uppercase; opacity: 0.7; transition: opacity 0.2s, color 0.2s;
+  }
+  .scroll-cue:hover { opacity: 1; color: var(--accent); }
+  .scroll-cue svg { animation: scrollBounce 2s ease-in-out infinite; }
+  @keyframes scrollBounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+  @media (max-width: 1100px) { .scroll-cue { display: none; } }
 
   .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
   .btn-primary {
@@ -562,7 +620,24 @@
   }
   @media (max-width: 768px) {
     nav { padding: 0 20px; }
-    .nav-links { display: none; }
+    .nav-toggle { display: flex; }
+    .nav-cta { display: none; }
+    .nav-links {
+      position: fixed; top: 68px; left: 0; right: 0;
+      flex-direction: column; gap: 0;
+      background: var(--bg2); border-bottom: 1px solid var(--border);
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height 0.3s ease, opacity 0.25s ease;
+      z-index: 99;
+    }
+    .nav-links.open { max-height: 400px; opacity: 1; }
+    .nav-links li { width: 100%; }
+    .nav-links a {
+      display: block; padding: 16px 24px; font-size: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-cta-mobile { display: block; }
+    .nav-cta-mobile a { color: var(--accent); font-weight: 600; }
     section { padding: 72px 20px; }
     .hero { padding: 110px 20px 60px; }
     .stats-grid { grid-template-columns: repeat(2,1fr); gap: 16px; }
@@ -583,18 +658,23 @@
 
 <div id="progress"></div>
 <div id="cursor-glow"></div>
+<div id="grain"></div>
 
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">DR<span>.</span></a>
-  <ul class="nav-links">
+  <ul class="nav-links" id="navLinks">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#contact">Contact</a></li>
+    <li class="nav-cta-mobile"><a href="mailto:dvsrwt@gmail.com">Get in touch →</a></li>
   </ul>
   <a href="mailto:dvsrwt@gmail.com" class="nav-cta">Get in touch →</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <!-- HERO -->
@@ -655,6 +735,11 @@
   <span class="t-key">"in_production"</span><span class="t-dim">:</span> <span class="t-accent">true</span>
 <span class="t-dim">}</span></pre></div>
   </div>
+
+  <a href="#about" class="scroll-cue" aria-label="Scroll to About section">
+    Scroll
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </a>
 </section>
 
 <!-- MARQUEE -->
@@ -1278,6 +1363,20 @@
 </footer>
 
 <script>
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    navToggle.classList.toggle('open', isOpen);
+    navToggle.setAttribute('aria-expanded', isOpen);
+  });
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    navToggle.classList.remove('open');
+    navToggle.setAttribute('aria-expanded', false);
+  }));
+
   // Scroll progress
   const progress = document.getElementById('progress');
   window.addEventListener('scroll', () => {
@@ -1354,4 +1453,3 @@
 </script>
 </body>
 </html>
-<!-- deploy retry -->
