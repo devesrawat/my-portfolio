@@ -3,26 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Devesh Rawat — Senior Backend Engineer</title>
+<title>Devesh Rawat — Production Agentic AI for Regulated FinTech</title>
+<meta name="description" content="Senior software engineer building production agentic AI systems for regulated fintech across GCC, UK, and India. Toptal Top 3%. Banking-grade delivery — BACS payment rails, Temporal-orchestrated workflows, compliance-aware RAG.">
+<meta property="og:title" content="Devesh Rawat — Production Agentic AI for Regulated FinTech">
+<meta property="og:description" content="Senior software engineer building production agentic AI systems for regulated fintech across GCC, UK, and India. Toptal Top 3%. Banking-grade delivery.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://devesrawat.github.io/my-portfolio/">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crosorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #080809;
-    --bg2: #0e0e10;
-    --bg3: #141416;
-    --surface: #1a1a1e;
-    --surface2: #222228;
+    --bg: #0a1220;
+    --bg2: #0d1728;
+    --bg3: #14202e;
+    --surface: #182437;
+    --surface2: #202e42;
     --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --accent: #c5f82a;
-    --accent2: #a8d820;
-    --accent-dim: rgba(197,248,42,0.12);
-    --accent-glow: rgba(197,248,42,0.25);
-    --text: #f0f0f0;
-    --text2: #a0a0a8;
-    --text3: #606068;
+    --border2: rgba(255,255,255,0.13);
+    --accent: #c79e4f;
+    --accent2: #b08a3e;
+    --accent-dim: rgba(199,158,79,0.14);
+    --accent-glow: rgba(199,158,79,0.28);
+    --rust: #ce604c;
+    --steel: #405470;
+    --text: #f0f0eb;
+    --text2: #a8b2c4;
+    --text3: #6b7688;
     --font-serif: 'Instrument Serif', Georgia, serif;
     --font-sans: 'DM Sans', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
@@ -53,7 +61,7 @@
   /* Scroll progress */
   #progress {
     position: fixed; top: 0; left: 0; right: 0; height: 2px;
-    background: linear-gradient(90deg, var(--accent), #7fff00);
+    background: linear-gradient(90deg, var(--accent), #e8c988);
     transform-origin: left;
     transform: scaleX(0);
     z-index: 1000;
@@ -64,7 +72,7 @@
   #cursor-glow {
     position: fixed; width: 400px; height: 400px;
     border-radius: 50%; pointer-events: none;
-    background: radial-gradient(circle, rgba(197,248,42,0.04) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(199,158,79,0.05) 0%, transparent 70%);
     transform: translate(-50%,-50%);
     z-index: 0; transition: opacity 0.3s;
   }
@@ -75,7 +83,7 @@
     padding: 0 48px;
     display: flex; align-items: center; justify-content: space-between;
     height: 68px;
-    background: rgba(8,8,9,0.75);
+    background: rgba(10,18,32,0.78);
     backdrop-filter: blur(20px) saturate(1.8);
     border-bottom: 1px solid var(--border);
   }
@@ -109,9 +117,9 @@
   .hero-mesh {
     position: absolute; inset: 0; z-index: 0;
     background:
-      radial-gradient(ellipse 60% 50% at 20% 50%, rgba(197,248,42,0.06) 0%, transparent 60%),
-      radial-gradient(ellipse 40% 60% at 80% 30%, rgba(100,200,255,0.04) 0%, transparent 50%),
-      radial-gradient(ellipse 50% 40% at 60% 80%, rgba(197,248,42,0.03) 0%, transparent 50%);
+      radial-gradient(ellipse 60% 50% at 20% 50%, rgba(199,158,79,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 80% 30%, rgba(64,84,112,0.10) 0%, transparent 50%),
+      radial-gradient(ellipse 50% 40% at 60% 80%, rgba(199,158,79,0.04) 0%, transparent 50%);
     animation: meshShift 12s ease-in-out infinite alternate;
   }
   @keyframes meshShift {
@@ -134,7 +142,7 @@
   .hero-badge {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 6px 14px; border-radius: 100px;
-    background: var(--accent-dim); border: 1px solid rgba(197,248,42,0.25);
+    background: var(--accent-dim); border: 1px solid rgba(199,158,79,0.3);
     font-size: 0.75rem; font-family: var(--font-mono); color: var(--accent);
     margin-bottom: 28px; letter-spacing: 0.05em;
   }
@@ -149,13 +157,13 @@
 
   .hero-title {
     font-family: var(--font-serif);
-    font-size: clamp(2.8rem, 5vw, 4.5rem);
-    line-height: 1.05; letter-spacing: -0.03em;
+    font-size: clamp(2.6rem, 4.6vw, 4.2rem);
+    line-height: 1.08; letter-spacing: -0.03em;
     color: var(--text); margin-bottom: 8px;
   }
   .hero-title em {
     font-style: italic;
-    background: linear-gradient(135deg, var(--accent) 0%, #7fff00 50%, var(--accent) 100%);
+    background: linear-gradient(135deg, var(--accent) 0%, #e8c988 50%, var(--accent) 100%);
     background-size: 200% 100%;
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -168,7 +176,7 @@
 
   .hero-subtitle {
     font-size: 1.1rem; color: var(--text2); margin-bottom: 28px;
-    max-width: 480px; line-height: 1.7; font-weight: 300;
+    max-width: 500px; line-height: 1.7; font-weight: 300;
   }
 
   .hero-tags {
@@ -239,7 +247,7 @@
   }
   .marquee-track {
     display: flex; gap: 0; white-space: nowrap;
-    animation: marquee 35s linear infinite;
+    animation: marquee 40s linear infinite;
   }
   @keyframes marquee {
     0% { transform: translateX(0); }
@@ -276,7 +284,7 @@
     line-height: 1.1; letter-spacing: -0.02em; color: var(--text);
     margin-bottom: 16px;
   }
-  .section-desc { font-size: 1.05rem; color: var(--text2); max-width: 520px; line-height: 1.7; }
+  .section-desc { font-size: 1.05rem; color: var(--text2); max-width: 540px; line-height: 1.7; }
 
   /* === STATS === */
   .stats-bar {
@@ -334,7 +342,7 @@
     font-family: var(--font-serif); font-size: 1.8rem; color: var(--text);
     line-height: 1.2; letter-spacing: -0.02em;
   }
-  .bento-toptal { background: linear-gradient(135deg, var(--bg2) 0%, rgba(197,248,42,0.06) 100%); }
+  .bento-toptal { background: linear-gradient(135deg, var(--bg2) 0%, rgba(199,158,79,0.07) 100%); }
   .bento-toptal .badge-toptal {
     display: inline-block; padding: 4px 12px; background: var(--accent);
     color: #0a0a0b; border-radius: 100px; font-size: 0.7rem; font-weight: 700;
@@ -373,8 +381,8 @@
   .skill-card:hover::before { opacity: 1; }
   .skill-card.featured {
     grid-column: span 2;
-    background: linear-gradient(135deg, var(--bg2) 0%, rgba(197,248,42,0.05) 100%);
-    border-color: rgba(197,248,42,0.2);
+    background: linear-gradient(135deg, var(--bg2) 0%, rgba(199,158,79,0.06) 100%);
+    border-color: rgba(199,158,79,0.25);
   }
   .skill-icon { font-size: 1.5rem; margin-bottom: 14px; }
   .skill-name { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 12px; }
@@ -384,11 +392,11 @@
     font-size: 0.7rem; font-family: var(--font-mono); color: var(--text3);
     border: 1px solid var(--border); transition: all 0.2s;
   }
-  .skill-card:hover .skill-tag { border-color: rgba(197,248,42,0.15); color: var(--text2); }
-  .skill-card.featured .skill-tag { color: var(--text2); border-color: rgba(197,248,42,0.2); }
+  .skill-card:hover .skill-tag { border-color: rgba(199,158,79,0.2); color: var(--text2); }
+  .skill-card.featured .skill-tag { color: var(--text2); border-color: rgba(199,158,79,0.25); }
   .featured-badge {
     display: inline-block; padding: 2px 10px; background: var(--accent-dim);
-    border: 1px solid rgba(197,248,42,0.3); border-radius: 100px;
+    border: 1px solid rgba(199,158,79,0.35); border-radius: 100px;
     font-size: 0.65rem; font-family: var(--font-mono); color: var(--accent);
     letter-spacing: 0.08em; margin-bottom: 12px;
   }
@@ -406,13 +414,13 @@
   }
   .project-card::after {
     content: ''; position: absolute; inset: 0; border-radius: var(--radius);
-    background: linear-gradient(135deg, rgba(197,248,42,0.04) 0%, transparent 60%);
+    background: linear-gradient(135deg, rgba(199,158,79,0.05) 0%, transparent 60%);
     opacity: 0; transition: opacity 0.3s;
   }
   .project-card:hover { border-color: var(--border2); transform: translateY(-4px);
     box-shadow: 0 24px 48px rgba(0,0,0,0.5); }
   .project-card:hover::after { opacity: 1; }
-  .project-card.active { border-color: rgba(197,248,42,0.3); }
+  .project-card.active { border-color: rgba(199,158,79,0.35); }
 
   .project-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
   .project-icon {
@@ -424,12 +432,13 @@
   .project-badge { padding: 3px 10px; border-radius: 100px; font-size: 0.65rem; font-family: var(--font-mono); letter-spacing: 0.06em; }
   .badge-live { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
   .badge-building {
-    background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(197,248,42,0.25);
+    background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(199,158,79,0.3);
     display: flex; align-items: center; gap: 6px;
   }
   .badge-building::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); animation: pulse 1.5s infinite; }
   .badge-web3 { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
-  .badge-ai { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+  .badge-ai { background: rgba(64,84,112,0.25); color: #9db3d1; border: 1px solid rgba(64,84,112,0.4); }
+  .badge-fintech { background: rgba(199,158,79,0.15); color: var(--accent); border: 1px solid rgba(199,158,79,0.35); }
   .project-name { font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
   .project-desc { font-size: 0.875rem; color: var(--text2); line-height: 1.6; flex: 1; }
   .project-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
@@ -445,13 +454,13 @@
     color: var(--text2); transition: all 0.2s;
   }
   .tool-chip:hover { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
-  .tool-chip.hot { border-color: rgba(197,248,42,0.25); color: var(--text); }
+  .tool-chip.hot { border-color: rgba(199,158,79,0.3); color: var(--text); }
 
   /* === EXPERIENCE TIMELINE === */
   .timeline { position: relative; margin-top: 56px; padding-left: 32px; }
   .timeline::before {
     content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px;
-    background: linear-gradient(180deg, var(--accent), rgba(197,248,42,0.2) 80%, transparent);
+    background: linear-gradient(180deg, var(--accent), rgba(199,158,79,0.2) 80%, transparent);
   }
   .timeline-item { position: relative; padding-bottom: 56px; }
   .timeline-item:last-child { padding-bottom: 0; }
@@ -490,15 +499,15 @@
   .author-name { font-size: 0.875rem; font-weight: 600; color: var(--text); }
   .author-title { font-size: 0.75rem; color: var(--text3); }
 
-  /* === LOOKING FOR === */
+  /* === ENGAGEMENTS === */
   .looking-section {
-    background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(197,248,42,0.05) 0%, transparent 70%), var(--bg2);
+    background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(199,158,79,0.06) 0%, transparent 70%), var(--bg2);
     border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
     text-align: center;
   }
   .looking-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin: 48px 0; }
-  .looking-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: all 0.3s; }
-  .looking-card:hover { border-color: rgba(197,248,42,0.25); }
+  .looking-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: all 0.3s; text-align: left; }
+  .looking-card:hover { border-color: rgba(199,158,79,0.3); }
   .looking-icon { font-size: 1.75rem; margin-bottom: 14px; }
   .looking-title { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
   .looking-desc { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
@@ -518,7 +527,7 @@
   .contact-cta-box { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; text-align: center; }
   .contact-cta-box h3 { font-family: var(--font-serif); font-size: 1.6rem; color: var(--text); margin-bottom: 12px; }
   .contact-cta-box p { font-size: 0.9rem; color: var(--text2); margin-bottom: 28px; line-height: 1.6; }
-  .email-display { font-family: var(--font-mono); font-size: 0.95rem; color: var(--accent); background: var(--accent-dim); padding: 12px 20px; border-radius: var(--radius-sm); border: 1px solid rgba(197,248,42,0.2); display: block; margin-bottom: 24px; }
+  .email-display { font-family: var(--font-mono); font-size: 0.95rem; color: var(--accent); background: var(--accent-dim); padding: 12px 20px; border-radius: var(--radius-sm); border: 1px solid rgba(199,158,79,0.25); display: block; margin-bottom: 24px; }
 
   /* === FOOTER === */
   footer {
@@ -595,25 +604,24 @@
 
   <div class="hero-content">
     <div class="hero-badge">
-      Available for new projects — Toptal Top 3%
+      Toptal Top 3% · Banking-Grade Delivery
     </div>
     <h1 class="hero-title">
-      Senior Backend<br>
-      <em>Engineer</em> &amp;<br>
-      Systems Architect
+      Production Agentic AI<br>
+      <em>for Regulated FinTech</em>
     </h1>
     <p class="hero-subtitle">
-      8+ years shipping distributed systems and AI-powered backends. From fintech and genomics to Web3 and agentic workflows. I build things that scale.
+      8+ years shipping distributed systems, now building LLM-powered agents for banks and fintechs across GCC, UK, and India. BACS payment rails, Temporal-orchestrated workflows, and agentic systems built to survive an audit — not just a demo.
     </p>
     <div class="hero-tags">
+      <div class="hero-tag">LangGraph</div>
+      <div class="hero-tag">Temporal Cloud</div>
+      <div class="hero-tag">MCP</div>
+      <div class="hero-tag">RAG</div>
       <div class="hero-tag">Rust</div>
       <div class="hero-tag">TypeScript</div>
       <div class="hero-tag">Python</div>
-      <div class="hero-tag">LangGraph</div>
-      <div class="hero-tag">Temporal</div>
       <div class="hero-tag">AWS</div>
-      <div class="hero-tag">NestJS</div>
-      <div class="hero-tag">MCP</div>
     </div>
     <div class="hero-actions">
       <a href="#projects" class="btn-primary">View my work</a>
@@ -630,20 +638,21 @@
     </div>
     <div class="terminal-body"><pre><span class="t-dim">{</span>
   <span class="t-key">"name"</span><span class="t-dim">:</span> <span class="t-str">"Devesh Rawat"</span><span class="t-dim">,</span>
-  <span class="t-key">"role"</span><span class="t-dim">:</span> <span class="t-str">"Senior Backend Engineer"</span><span class="t-dim">,</span>
+  <span class="t-key">"role"</span><span class="t-dim">:</span> <span class="t-str">"Production Agentic AI Engineer"</span><span class="t-dim">,</span>
+  <span class="t-key">"niche"</span><span class="t-dim">:</span> <span class="t-str">"Regulated FinTech — GCC · UK · India"</span><span class="t-dim">,</span>
   <span class="t-key">"current_focus"</span><span class="t-dim">:</span> <span class="t-arr">[</span>
     <span class="t-str">"agentic-workflows"</span><span class="t-dim">,</span>
-    <span class="t-str">"mcp-integrations"</span><span class="t-dim">,</span>
-    <span class="t-str">"trading-signal-engines"</span>
+    <span class="t-str">"banking-payment-rails"</span><span class="t-dim">,</span>
+    <span class="t-str">"compliance-aware-rag"</span>
   <span class="t-arr">]</span><span class="t-dim">,</span>
-  <span class="t-key">"languages"</span><span class="t-dim">:</span> <span class="t-arr">[</span><span class="t-str">"Rust"</span><span class="t-dim">,</span> <span class="t-str">"TypeScript"</span><span class="t-dim">,</span> <span class="t-str">"Python"</span><span class="t-dim">,</span> <span class="t-str">"Solidity"</span><span class="t-arr">]</span><span class="t-dim">,</span>
+  <span class="t-key">"languages"</span><span class="t-dim">:</span> <span class="t-arr">[</span><span class="t-str">"Rust"</span><span class="t-dim">,</span> <span class="t-str">"TypeScript"</span><span class="t-dim">,</span> <span class="t-str">"Python"</span><span class="t-arr">]</span><span class="t-dim">,</span>
   <span class="t-key">"ai_stack"</span><span class="t-dim">:</span> <span class="t-arr">[</span>
     <span class="t-str">"LangGraph"</span><span class="t-dim">,</span> <span class="t-str">"CrewAI"</span><span class="t-dim">,</span> <span class="t-str">"Anthropic SDK"</span><span class="t-dim">,</span>
     <span class="t-str">"RAG + pgvector"</span><span class="t-dim">,</span> <span class="t-str">"MCP"</span><span class="t-dim">,</span> <span class="t-str">"Groq"</span>
   <span class="t-arr">]</span><span class="t-dim">,</span>
   <span class="t-key">"infra"</span><span class="t-dim">:</span> <span class="t-arr">[</span><span class="t-str">"AWS"</span><span class="t-dim">,</span> <span class="t-str">"Temporal Cloud"</span><span class="t-dim">,</span> <span class="t-str">"K8s"</span><span class="t-arr">]</span><span class="t-dim">,</span>
   <span class="t-key">"toptal"</span><span class="t-dim">:</span> <span class="t-bool">true</span><span class="t-dim">,</span>
-  <span class="t-key">"available"</span><span class="t-dim">:</span> <span class="t-accent">true</span>
+  <span class="t-key">"in_production"</span><span class="t-dim">:</span> <span class="t-accent">true</span>
 <span class="t-dim">}</span></pre></div>
   </div>
 </section>
@@ -685,7 +694,7 @@
       <div class="bento-card bento-bio fade-up">
         <span class="bento-label">Who I am</span>
         <p style="font-size:1rem;line-height:1.8">
-          I'm a distributed systems architect who ships end-to-end. My background spans fintech banking workflows, healthcare genomics pipelines, Web3 multi-chain NFT platforms, and now AI-powered agentic systems. I don't just design — I own delivery from first commit to production.
+          I'm a production engineer who ships end-to-end — the person banks and fintechs call when an agentic AI system has to work under audit, not just in a demo. My background spans BACS payment rails, GCC currency-compliant banking workflows, healthcare genomics pipelines, and now LLM-powered systems that have to be fast, observable, and provably correct.
         </p>
       </div>
 
@@ -698,17 +707,17 @@
       <div class="bento-card bento-toptal fade-up">
         <span class="badge-toptal">TOPTAL</span>
         <h3 style="font-size:1.1rem">Top 3% Globally</h3>
-        <p>Vetted through Toptal's rigorous screening process. Working with international clients on high-stakes, performance-critical distributed systems and AI workflows.</p>
+        <p>Vetted through Toptal's rigorous screening process. Working with banks and fintechs on high-stakes, compliance-sensitive distributed systems and agentic AI.</p>
       </div>
 
       <div class="bento-card bento-focus fade-up">
         <span class="bento-label">Current Focus</span>
         <div class="fun-stack">
-          <div class="fun-row"><span>Agentic AI</span><div class="fun-bar"><div class="fun-fill" style="width:95%"></div></div></div>
+          <div class="fun-row"><span>Regulated Agentic AI</span><div class="fun-bar"><div class="fun-fill" style="width:95%"></div></div></div>
+          <div class="fun-row"><span>Payment Rails (BACS)</span><div class="fun-bar"><div class="fun-fill" style="width:90%"></div></div></div>
+          <div class="fun-row"><span>Compliance-Aware RAG</span><div class="fun-bar"><div class="fun-fill" style="width:85%"></div></div></div>
+          <div class="fun-row"><span>Semantic Cost Control</span><div class="fun-bar"><div class="fun-fill" style="width:88%"></div></div></div>
           <div class="fun-row"><span>MCP Integration</span><div class="fun-bar"><div class="fun-fill" style="width:90%"></div></div></div>
-          <div class="fun-row"><span>Trading Systems</span><div class="fun-bar"><div class="fun-fill" style="width:80%"></div></div></div>
-          <div class="fun-row"><span>Rust Services</span><div class="fun-bar"><div class="fun-fill" style="width:85%"></div></div></div>
-          <div class="fun-row"><span>Temporal Workflows</span><div class="fun-bar"><div class="fun-fill" style="width:88%"></div></div></div>
         </div>
       </div>
 
@@ -716,10 +725,10 @@
         <span class="bento-label">Architecture Principles</span>
         <ul class="principle-list">
           <li>Event-driven over request-driven for anything async or retryable</li>
-          <li>Temporal for workflows with steps, retries, or compensation logic</li>
+          <li>Temporal for workflows with steps, retries, or compensation logic — payment rails demand it</li>
           <li>Boring technology wins — PostgreSQL over exotic stores by default</li>
-          <li>Design for observability from day one: logs, metrics, tracing, alerting</li>
-          <li>One source of truth — data in two places will always diverge</li>
+          <li>Audit trails and observability are day-one requirements — every agent decision needs to be explainable</li>
+          <li>Compliance is a design constraint, not a blocker — build for DPDP/RBI/GCC frameworks from the first commit</li>
         </ul>
       </div>
 
@@ -727,9 +736,9 @@
         <span class="bento-label">Domains</span>
         <div class="fun-stack">
           <div class="fun-row"><span>Fintech</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
-          <div class="fun-row"><span>Healthcare</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
-          <div class="fun-row"><span>Web3 / NFT</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
+          <div class="fun-row"><span>Regulatory Compliance</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
           <div class="fun-row"><span>AI Platforms</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
+          <div class="fun-row"><span>Healthcare</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
           <div class="fun-row"><span>Trading</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
         </div>
       </div>
@@ -741,27 +750,41 @@
 <section id="skills" style="background:var(--bg2)">
   <div class="container">
     <div class="section-label">Expertise</div>
-    <h2 class="section-title">What I build with</h2>
-    <p class="section-desc">Eight years across multiple stacks. Deep expertise in backend systems, AI/LLM integration, and blockchain development.</p>
+    <h2 class="section-title">Built for regulated fintech</h2>
+    <p class="section-desc">Eight years across banking, AI, and distributed systems. Deep expertise in production agentic AI, payment infrastructure, and compliance-aware architecture.</p>
 
     <div class="skills-grid">
       <div class="skill-card featured fade-up tilt">
-        <div class="featured-badge">PRIMARY FOCUS · 2024–2025</div>
+        <div class="featured-badge">PRIMARY FOCUS · Production Agentic AI</div>
         <div class="skill-icon">🤖</div>
         <div class="skill-name">AI &amp; Agentic Systems</div>
         <div class="skill-tags">
           <span class="skill-tag">LangGraph</span>
           <span class="skill-tag">CrewAI</span>
-          <span class="skill-tag">LangChain</span>
           <span class="skill-tag">MCP Server</span>
           <span class="skill-tag">RAG Pipelines</span>
-          <span class="skill-tag">pgvector</span>
-          <span class="skill-tag">Pinecone</span>
+          <span class="skill-tag">Compliance-Aware RAG</span>
+          <span class="skill-tag">Semantic Caching</span>
           <span class="skill-tag">Anthropic SDK</span>
-          <span class="skill-tag">OpenAI SDK</span>
+          <span class="skill-tag">Multi-Agent Orchestration</span>
+          <span class="skill-tag">pgvector</span>
           <span class="skill-tag">Groq API</span>
-          <span class="skill-tag">QLoRA Fine-tuning</span>
-          <span class="skill-tag">Structured Output</span>
+        </div>
+      </div>
+
+      <div class="skill-card featured fade-up tilt">
+        <div class="featured-badge">NICHE · Regulated FinTech</div>
+        <div class="skill-icon">🏦</div>
+        <div class="skill-name">Regulated FinTech &amp; Payments</div>
+        <div class="skill-tags">
+          <span class="skill-tag">BACS Payments</span>
+          <span class="skill-tag">ClearBank</span>
+          <span class="skill-tag">Mambu Core Banking</span>
+          <span class="skill-tag">Currency Cloud</span>
+          <span class="skill-tag">GCC Regulatory Compliance</span>
+          <span class="skill-tag">DPDP / RBI Awareness</span>
+          <span class="skill-tag">Audit-Grade Observability</span>
+          <span class="skill-tag">Sharia-Compliant Delivery</span>
         </div>
       </div>
 
@@ -776,19 +799,6 @@
           <span class="skill-tag">GraphQL</span>
           <span class="skill-tag">REST</span>
           <span class="skill-tag">gRPC</span>
-        </div>
-      </div>
-
-      <div class="skill-card fade-up tilt">
-        <div class="skill-icon">⛓️</div>
-        <div class="skill-name">Blockchain &amp; Web3</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Solidity</span>
-          <span class="skill-tag">Solana (Rust)</span>
-          <span class="skill-tag">Diamond Standard</span>
-          <span class="skill-tag">Ethers.js</span>
-          <span class="skill-tag">EVM Chains</span>
-          <span class="skill-tag">NFT Platforms</span>
         </div>
       </div>
 
@@ -832,19 +842,6 @@
       </div>
 
       <div class="skill-card fade-up tilt">
-        <div class="skill-icon">🐍</div>
-        <div class="skill-name">Python &amp; ML</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Python 3.11+</span>
-          <span class="skill-tag">FastAPI</span>
-          <span class="skill-tag">Pydantic</span>
-          <span class="skill-tag">ML Pipelines</span>
-          <span class="skill-tag">uv / pyproject</span>
-          <span class="skill-tag">pytest</span>
-        </div>
-      </div>
-
-      <div class="skill-card fade-up tilt">
         <div class="skill-icon">🏗️</div>
         <div class="skill-name">Architecture</div>
         <div class="skill-tags">
@@ -856,6 +853,18 @@
           <span class="skill-tag">SQS + DLQ</span>
         </div>
       </div>
+
+      <div class="skill-card fade-up tilt">
+        <div class="skill-icon">⛓️</div>
+        <div class="skill-name">Blockchain &amp; Web3</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Solidity</span>
+          <span class="skill-tag">Solana (Rust)</span>
+          <span class="skill-tag">Diamond Standard</span>
+          <span class="skill-tag">Ethers.js</span>
+          <span class="skill-tag">EVM Chains</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -865,10 +874,48 @@
   <div class="container">
     <div class="section-label">Projects</div>
     <h2 class="section-title">Selected work</h2>
-    <p class="section-desc">Production systems across AI, fintech, Web3, and developer tooling.</p>
+    <p class="section-desc">Production systems across regulated fintech, agentic AI, and high-performance infrastructure.</p>
 
     <div class="projects-grid">
       <div class="project-card active fade-up tilt">
+        <div class="project-header">
+          <div class="project-icon">🏦</div>
+          <div class="project-badges">
+            <span class="project-badge badge-fintech">Regulated FinTech</span>
+            <span class="project-badge badge-live">Live</span>
+          </div>
+        </div>
+        <div class="project-name">Banking Workflow Engine</div>
+        <div class="project-desc">Durable payment workflow system for a fintech client. Temporal-orchestrated multi-step transactions with compensation logic, idempotency guarantees, and full audit trail. Handles settlement, reconciliation, and fraud checks.</div>
+        <div class="project-tech">
+          <span class="tech-pill">Temporal Cloud</span>
+          <span class="tech-pill">NestJS</span>
+          <span class="tech-pill">PostgreSQL</span>
+          <span class="tech-pill">EventBridge</span>
+          <span class="tech-pill">Redis</span>
+        </div>
+      </div>
+
+      <div class="project-card fade-up tilt">
+        <div class="project-header">
+          <div class="project-icon">🔁</div>
+          <div class="project-badges">
+            <span class="project-badge badge-live">Live</span>
+            <span class="project-badge badge-ai">AI</span>
+          </div>
+        </div>
+        <div class="project-name">Agentic Workflow Platform</div>
+        <div class="project-desc">Multi-step agentic workflow engine for production LLM pipelines. Temporal Cloud for durable orchestration, LangGraph for agent state machines, with human-in-the-loop via signal/query pattern.</div>
+        <div class="project-tech">
+          <span class="tech-pill">Temporal Cloud</span>
+          <span class="tech-pill">LangGraph</span>
+          <span class="tech-pill">NestJS</span>
+          <span class="tech-pill">OpenAI SDK</span>
+          <span class="tech-pill">PostgreSQL</span>
+        </div>
+      </div>
+
+      <div class="project-card fade-up tilt">
         <div class="project-header">
           <div class="project-icon">⚡</div>
           <div class="project-badges">
@@ -906,19 +953,16 @@
 
       <div class="project-card fade-up tilt">
         <div class="project-header">
-          <div class="project-icon">🔁</div>
-          <div class="project-badges">
-            <span class="project-badge badge-live">Live</span>
-            <span class="project-badge badge-ai">AI</span>
-          </div>
+          <div class="project-icon">🧬</div>
+          <div class="project-badges"><span class="project-badge badge-live">Live</span></div>
         </div>
-        <div class="project-name">Agentic Workflow Platform</div>
-        <div class="project-desc">Multi-step agentic workflow engine for production LLM pipelines. Temporal Cloud for durable orchestration, LangGraph for agent state machines, with human-in-the-loop via signal/query pattern.</div>
+        <div class="project-name">Genomics Data Pipeline</div>
+        <div class="project-desc">High-throughput genomics ingestion and analysis pipeline. S3→SQS→processor pattern processing terabyte-scale sequencing data. Rust-based parallel parser with AWS Lambda for scalable transformation.</div>
         <div class="project-tech">
-          <span class="tech-pill">Temporal Cloud</span>
-          <span class="tech-pill">LangGraph</span>
-          <span class="tech-pill">NestJS</span>
-          <span class="tech-pill">OpenAI SDK</span>
+          <span class="tech-pill">Rust</span>
+          <span class="tech-pill">AWS S3</span>
+          <span class="tech-pill">SQS</span>
+          <span class="tech-pill">Lambda</span>
           <span class="tech-pill">PostgreSQL</span>
         </div>
       </div>
@@ -938,38 +982,6 @@
           <span class="tech-pill">GraphQL</span>
         </div>
       </div>
-
-      <div class="project-card fade-up tilt">
-        <div class="project-header">
-          <div class="project-icon">🧬</div>
-          <div class="project-badges"><span class="project-badge badge-live">Live</span></div>
-        </div>
-        <div class="project-name">Genomics Data Pipeline</div>
-        <div class="project-desc">High-throughput genomics ingestion and analysis pipeline. S3→SQS→processor pattern processing terabyte-scale sequencing data. Rust-based parallel parser with AWS Lambda for scalable transformation.</div>
-        <div class="project-tech">
-          <span class="tech-pill">Rust</span>
-          <span class="tech-pill">AWS S3</span>
-          <span class="tech-pill">SQS</span>
-          <span class="tech-pill">Lambda</span>
-          <span class="tech-pill">PostgreSQL</span>
-        </div>
-      </div>
-
-      <div class="project-card fade-up tilt">
-        <div class="project-header">
-          <div class="project-icon">🏦</div>
-          <div class="project-badges"><span class="project-badge badge-live">Live</span></div>
-        </div>
-        <div class="project-name">Banking Workflow Engine</div>
-        <div class="project-desc">Durable payment workflow system for a fintech client. Temporal-orchestrated multi-step transactions with compensation logic, idempotency guarantees, and full audit trail. Handles settlement, reconciliation, and fraud checks.</div>
-        <div class="project-tech">
-          <span class="tech-pill">Temporal Cloud</span>
-          <span class="tech-pill">NestJS</span>
-          <span class="tech-pill">PostgreSQL</span>
-          <span class="tech-pill">EventBridge</span>
-          <span class="tech-pill">Redis</span>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -981,6 +993,12 @@
     <h2 class="section-title">Every tool in the arsenal</h2>
 
     <div class="tools-domains">
+      <div>
+        <div class="tool-domain-name">Regulated FinTech Stack</div>
+        <div class="tool-chips">
+          <span class="tool-chip hot">BACS Payments</span><span class="tool-chip hot">ClearBank</span><span class="tool-chip hot">Mambu Core Banking</span><span class="tool-chip hot">Currency Cloud</span><span class="tool-chip hot">Temporal Cloud</span><span class="tool-chip">DPDP (India)</span><span class="tool-chip">RBI Guidelines</span><span class="tool-chip">GCC Financial Regulations</span>
+        </div>
+      </div>
       <div>
         <div class="tool-domain-name">Languages</div>
         <div class="tool-chips">
@@ -1170,27 +1188,27 @@
   </div>
 </section>
 
-<!-- LOOKING FOR -->
+<!-- ENGAGEMENTS -->
 <section class="looking-section">
   <div class="container">
-    <div class="section-label" style="justify-content:center">Open to</div>
-    <h2 class="section-title" style="text-align:center">What I'm looking for</h2>
+    <div class="section-label" style="justify-content:center">Engagements</div>
+    <h2 class="section-title" style="text-align:center">How I work with clients</h2>
 
     <div class="looking-grid">
       <div class="looking-card fade-up">
-        <div class="looking-icon">🤖</div>
-        <div class="looking-title">AI-Powered Products</div>
-        <div class="looking-desc">Production LLM backends, agentic workflow platforms, RAG systems, and MCP server development. Especially interested in novel applications of multi-agent orchestration.</div>
-      </div>
-      <div class="looking-card fade-up">
-        <div class="looking-icon">⚡</div>
-        <div class="looking-title">High-Performance Systems</div>
-        <div class="looking-desc">Rust-based services, trading infrastructure, genomics pipelines, and any system where performance is a first-class requirement. p99 latency matters.</div>
-      </div>
-      <div class="looking-card fade-up">
         <div class="looking-icon">🏗️</div>
-        <div class="looking-title">Architecture Leadership</div>
-        <div class="looking-desc">Greenfield backend architecture, distributed systems design, or fixing systems that have grown too complex. I can own the technical roadmap, not just execute tickets.</div>
+        <div class="looking-title">Production Builds</div>
+        <div class="looking-desc">End-to-end delivery of agentic AI and payment infrastructure — from architecture through production. I own the roadmap, not just the tickets.</div>
+      </div>
+      <div class="looking-card fade-up">
+        <div class="looking-icon">🔍</div>
+        <div class="looking-title">Technical &amp; Compliance Audits</div>
+        <div class="looking-desc">Architecture reviews for teams shipping LLM systems into regulated environments — where the fastest chatbot demo and the fastest audit-safe system are two very different builds.</div>
+      </div>
+      <div class="looking-card fade-up">
+        <div class="looking-icon">⚙️</div>
+        <div class="looking-title">Fractional Architecture</div>
+        <div class="looking-desc">Ongoing technical ownership for teams that need a senior architect on tap, not a full-time hire — for systems where correctness and cost both matter.</div>
       </div>
     </div>
 
@@ -1205,7 +1223,7 @@
       <div>
         <div class="section-label">Contact</div>
         <h2 class="section-title">Let's build<br>something great</h2>
-        <p class="section-desc">Open to freelance engagements, contract roles, and interesting problems. Response time: same day.</p>
+        <p class="section-desc">For engineering leaders and CTOs shipping agentic AI in regulated fintech — GCC, UK, and India. Response time: same day.</p>
 
         <div class="contact-links">
           <a href="mailto:dvsrwt@gmail.com" class="contact-link">
@@ -1213,15 +1231,20 @@
             <span class="contact-link-label">Email</span>
             <span class="contact-link-value">dvsrwt@gmail.com</span>
           </a>
-          <a href="https://linkedin.com/in/deves-rawat" class="contact-link" target="_blank" rel="noopener">
+          <a href="https://www.linkedin.com/in/iamdeveshrawat/" class="contact-link" target="_blank" rel="noopener">
             <span class="contact-link-icon">💼</span>
             <span class="contact-link-label">LinkedIn</span>
             <span class="contact-link-value">Devesh Rawat</span>
           </a>
+          <a href="https://devesrawat.substack.com" class="contact-link" target="_blank" rel="noopener">
+            <span class="contact-link-icon">📝</span>
+            <span class="contact-link-label">The Failure Mode</span>
+            <span class="contact-link-value">Newsletter</span>
+          </a>
           <a href="https://github.com/devesrawat" class="contact-link" target="_blank" rel="noopener">
             <span class="contact-link-icon">🐙</span>
             <span class="contact-link-label">GitHub</span>
-            <span class="contact-link-value">deveshrawat</span>
+            <span class="contact-link-value">devesrawat</span>
           </a>
           <a href="https://toptal.com/resume/devesh-rawat" class="contact-link" target="_blank" rel="noopener">
             <span class="contact-link-icon">⭐</span>
@@ -1233,7 +1256,7 @@
 
       <div class="contact-cta-box fade-up">
         <h3>Ready when you are</h3>
-        <p>Whether it's a quick architecture question or a full product build — I'm interested in work that pushes what's possible with distributed systems and AI.</p>
+        <p>Whether it's a quick architecture question or a full production build — I'm interested in agentic AI systems that have to survive contact with regulators, auditors, and real transaction volume.</p>
         <span class="email-display">dvsrwt@gmail.com</span>
         <a href="mailto:dvsrwt@gmail.com" class="btn-primary" style="display:block;text-align:center">Send a message →</a>
       </div>
@@ -1244,7 +1267,7 @@
 <!-- FOOTER -->
 <footer>
   <a href="#" class="footer-logo">Devesh Rawat<span>.</span></a>
-  <span class="footer-meta">// Senior Backend Engineer · Jaipur, India</span>
+  <span class="footer-meta">// Production Agentic AI for Regulated FinTech · Bengaluru, India</span>
   <div class="footer-links">
     <a href="#about">About</a>
     <a href="#skills">Skills</a>
@@ -1315,11 +1338,11 @@
 
   // Build marquee
   const items = [
-    'Rust','TypeScript','Python','LangGraph','Temporal Cloud',
-    'MCP Protocol','Anthropic SDK','NestJS','FastAPI','pgvector',
-    'AWS SQS','CrewAI','Solidity','Solana','PostgreSQL',
-    'RAG Pipelines','Kubernetes','TimescaleDB','Actix-web','Groq API',
-    'Redis','Docker','Diamond Standard','GitHub Actions','Pinecone',
+    'BACS Payments','ClearBank','Mambu Core Banking','Currency Cloud','Temporal Cloud',
+    'LangGraph','MCP Protocol','Anthropic SDK','RAG Pipelines','Compliance-Aware RAG',
+    'NestJS','FastAPI','pgvector','AWS SQS','PostgreSQL',
+    'Redis','Kubernetes','Rust','TypeScript','Groq API',
+    'CrewAI','Docker','GitHub Actions','TimescaleDB','Actix-web',
   ];
   const track = document.getElementById('marqueeTrack');
   [...items, ...items].forEach(t => {
