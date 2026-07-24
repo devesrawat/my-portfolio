@@ -43,6 +43,35 @@
     --font-mono: 'JetBrains Mono', monospace;
     --radius: 16px;
     --radius-sm: 10px;
+
+    /* --- Design tokens: spacing scale (4px base) --- */
+    --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+    --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
+    --sp-9: 96px; --sp-10: 128px;
+
+    /* --- Type scale (1.25 major third, base 16px) --- */
+    --fs-xs: 0.75rem;   --fs-sm: 0.875rem;  --fs-base: 1rem;
+    --fs-md: 1.125rem;  --fs-lg: 1.4rem;    --fs-xl: 1.75rem;
+    --fs-2xl: 2.2rem;   --fs-3xl: 2.75rem;  --fs-4xl: 3.4rem;
+
+    /* --- Radius tokens --- */
+    --radius-xs: 6px; --radius-lg: 22px; --radius-pill: 100px;
+
+    /* --- Elevation tokens --- */
+    --shadow-sm: 0 4px 12px rgba(0,0,0,0.25);
+    --shadow-md: 0 20px 40px rgba(0,0,0,0.4);
+    --shadow-lg: 0 24px 48px rgba(0,0,0,0.5);
+    --shadow-xl: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+    --shadow-glow: 0 12px 40px var(--accent-glow);
+
+    /* --- Motion tokens --- */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur-fast: 0.15s;
+    --dur-base: 0.3s;
+    --dur-slow: 0.6s;
+    --dur-slower: 1.2s;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -106,6 +135,29 @@
     z-index: 0; transition: opacity 0.3s;
   }
 
+  /* Custom cursor dot — desktop only */
+  #cursor-dot {
+    position: fixed; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); pointer-events: none; z-index: 999;
+    transform: translate(-50%,-50%); transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-base);
+    mix-blend-mode: difference; opacity: 0;
+  }
+  #cursor-dot.active { opacity: 1; }
+  #cursor-dot.grow { transform: translate(-50%,-50%) scale(3.5); }
+  @media (max-width: 900px), (hover: none) { #cursor-dot { display: none; } }
+
+  /* Section divider — animated draw-in accent between major sections */
+  .section-divider {
+    display: flex; align-items: center; justify-content: center;
+    height: 1px; position: relative; overflow: visible;
+  }
+  .section-divider::before {
+    content: ''; height: 1px; width: 0; max-width: 220px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    transition: width 1s var(--ease-out);
+  }
+  .section-divider.visible::before { width: 100%; }
+
   /* === NAV === */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -126,7 +178,14 @@
     color: var(--text2); text-decoration: none; font-size: 0.875rem;
     font-weight: 500; letter-spacing: 0.02em; transition: color 0.2s;
   }
+  .nav-links a { position: relative; }
   .nav-links a:hover { color: var(--accent); }
+  .nav-links a::after {
+    content: ''; position: absolute; left: 0; right: 100%; bottom: -6px; height: 1.5px;
+    background: var(--accent); transition: right var(--dur-base) var(--ease-out);
+  }
+  .nav-links a:hover::after, .nav-links a.active::after { right: 0; }
+  .nav-links a.active { color: var(--accent); }
   .nav-cta {
     padding: 8px 20px; background: var(--accent); color: #0a0a0b;
     border-radius: 8px; font-size: 0.875rem; font-weight: 600;
@@ -247,14 +306,32 @@
   }
   @media (max-width: 1100px) { .scroll-cue { display: none; } }
 
+  /* Signal strip — self-hosted animated EKG accent, no external deps */
+  .signal-strip { max-width: 900px; margin: 0 auto; padding: 0 48px; position: relative; z-index: 2; }
+  .signal-strip svg { width: 100%; height: auto; display: block; }
+  .signal-caption {
+    display: flex; justify-content: space-between; font-family: var(--font-mono);
+    font-size: 0.68rem; color: var(--text3); letter-spacing: 0.08em; margin-top: 10px;
+    text-transform: uppercase;
+  }
+  @media (max-width: 768px) { .signal-strip { padding: 0 20px; } }
+
   .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
   .btn-primary {
     padding: 13px 28px; background: var(--accent); color: #0a0a0b;
     border-radius: var(--radius-sm); font-weight: 600; font-size: 0.9rem;
-    text-decoration: none; transition: all 0.25s; border: none; cursor: pointer;
-    position: relative; overflow: hidden;
+    text-decoration: none; transition: transform var(--dur-base) var(--ease-spring), box-shadow var(--dur-base);
+    border: none; cursor: pointer;
+    position: relative; overflow: hidden; isolation: isolate;
   }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px var(--accent-glow); }
+  .btn-primary::before {
+    content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,0.45), transparent);
+    transform: skewX(-20deg); transition: left var(--dur-slow) var(--ease-out); z-index: 1;
+  }
+  .btn-primary:hover::before { left: 130%; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-glow); }
+  .btn-primary span, .btn-primary { position: relative; }
   .btn-secondary {
     padding: 13px 28px; background: transparent;
     border: 1px solid var(--border2); color: var(--text);
@@ -658,6 +735,7 @@
 
 <div id="progress"></div>
 <div id="cursor-glow"></div>
+<div id="cursor-dot"></div>
 <div id="grain"></div>
 
 <!-- NAV -->
@@ -741,6 +819,34 @@
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
   </a>
 </section>
+
+<!-- SIGNAL STRIP — self-hosted animated EKG accent -->
+<div class="signal-strip fade-up">
+  <svg viewBox="0 0 900 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Failure-spike signal recovering into a stable line">
+    <defs>
+      <linearGradient id="sigbg" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#0A1220"/>
+        <stop offset="100%" stop-color="#121E32"/>
+      </linearGradient>
+    </defs>
+    <rect width="900" height="160" rx="16" fill="url(#sigbg)"/>
+    <path d="M 40.0,88.0 L 42.3,88.0 L 44.7,88.0 L 47.0,88.0 L 49.4,88.0 L 51.7,88.0 L 54.1,88.0 L 56.4,88.0 L 58.7,88.0 L 61.1,88.0 L 63.4,88.0 L 65.8,88.0 L 68.1,88.0 L 70.5,88.0 L 72.8,88.0 L 75.1,88.0 L 77.5,88.0 L 79.8,88.0 L 82.2,88.0 L 84.5,88.0 L 86.9,88.0 L 89.2,88.0 L 91.5,88.0 L 93.9,88.0 L 96.2,88.0 L 98.6,88.0 L 100.9,88.0 L 103.3,88.0 L 105.6,88.0 L 107.9,88.0 L 110.3,88.0 L 112.6,88.0 L 115.0,88.0 L 117.3,88.0 L 119.7,88.0 L 122.0,88.0 L 124.3,88.0 L 126.7,88.0 L 129.0,88.0 L 131.4,88.0 L 133.7,88.0 L 136.1,88.0 L 138.4,88.0 L 140.7,88.0 L 143.1,88.0 L 145.4,88.0 L 147.8,88.0 L 150.1,88.0 L 152.5,88.0 L 154.8,88.0 L 157.1,88.0 L 159.5,88.0 L 161.8,88.0 L 164.2,88.0 L 166.5,88.0 L 168.9,88.0 L 171.2,88.0 L 173.2,87.4 L 175.3,86.8 L 177.3,86.1 L 179.4,85.5 L 181.4,85.0 L 183.5,84.4 L 185.5,83.9 L 187.6,83.4 L 189.6,82.9 L 191.7,82.5 L 193.8,82.1 L 195.8,81.8 L 197.8,81.5 L 199.9,81.3 L 201.9,81.1 L 204.0,80.9 L 206.0,80.9 L 208.1,80.8 L 210.1,80.9 L 212.2,80.9 L 214.2,81.1 L 216.3,81.3 L 218.3,81.5 L 220.4,81.8 L 222.4,82.1 L 224.5,82.5 L 226.5,82.9 L 228.6,83.4 L 230.6,83.9 L 232.7,84.4 L 234.8,85.0 L 236.8,85.5 L 238.8,86.1 L 240.9,86.8 L 242.9,87.4 L 245.0,88.0 L 246.6,93.8 L 248.2,99.5 L 249.8,105.0 L 251.4,110.4 L 253.1,115.4 L 254.7,120.1 L 256.3,124.4 L 257.9,128.3 L 259.5,131.6 L 261.1,134.4 L 262.7,136.6 L 264.3,138.2 L 265.9,139.2 L 267.6,139.5 L 269.2,139.2 L 270.8,138.2 L 272.4,136.6 L 274.0,134.4 L 275.6,131.6 L 277.2,128.3 L 278.8,124.4 L 280.4,120.1 L 282.0,115.4 L 283.7,110.4 L 285.3,105.0 L 286.9,99.5 L 288.5,93.8 L 290.1,93.4 L 292.5,93.4 L 294.9,93.4 L 297.3,93.4 L 299.7,93.4 L 302.1,93.4 L 304.5,93.4 L 306.8,93.4 L 309.2,93.4 L 311.6,93.4 L 314.0,93.4 L 316.4,93.4 L 318.8,93.4 L 321.2,93.4 L 323.6,93.4 L 326.0,93.4 L 328.4,93.4 L 330.8,93.4 L 333.2,93.4 L 335.5,93.4 L 337.9,93.4 L 340.3,93.4 L 342.7,93.4 L 345.1,93.4 L 347.5,88.0 L 349.4,87.4 L 351.2,86.9 L 353.1,86.3 L 355.0,85.8 L 356.9,85.2 L 358.7,84.7 L 360.6,84.1 L 362.5,83.6 L 364.4,83.1 L 366.2,82.5 L 368.1,82.0 L 370.0,81.4 L 371.9,80.9 L 373.7,80.4 L 375.6,79.9 L 377.5,79.3 L 379.4,78.8 L 381.2,78.3 L 383.1,77.8 L 385.0,77.3 L 386.9,76.8 L 388.7,76.3 L 390.6,75.8 L 392.5,75.4 L 394.4,74.9 L 396.2,74.4 L 398.1,74.0 L 400.0,73.5 L 401.9,73.1 L 403.7,72.6 L 405.6,72.2 L 407.5,71.8 L 409.4,71.4 L 411.2,71.0 L 413.1,70.6 L 415.0,70.2 L 416.8,69.8 L 418.7,69.4 L 420.6,69.1 L 422.5,68.7 L 424.3,68.4 L 426.2,68.1 L 428.1,67.7 L 430.0,67.4 L 431.8,67.1 L 433.7,66.8 L 435.6,66.6 L 437.5,66.3 L 439.3,66.0 L 441.2,65.8 L 443.1,65.6 L 445.0,65.3 L 446.8,65.1 L 448.7,64.9 L 450.6,64.7 L 452.5,64.6 L 454.3,64.4 L 456.2,64.2 L 458.1,64.1 L 460.0,64.0 L 461.8,63.9 L 463.7,63.8 L 465.6,63.7 L 467.5,63.6 L 469.3,63.5 L 471.2,63.5 L 473.1,63.4 L 475.0,63.4 L 476.8,63.4 L 478.7,63.4 L 480.6,63.4 L 482.4,63.4 L 484.3,63.4 L 486.2,63.5 L 488.1,63.5 L 489.9,63.6 L 491.8,63.7 L 493.7,63.8 L 495.6,63.9 L 497.4,64.0 L 499.3,64.1 L 501.2,64.2 L 503.1,64.4 L 504.9,64.6 L 506.8,64.7 L 508.7,64.9 L 510.6,65.1 L 512.4,65.3 L 514.3,65.6 L 516.2,65.8 L 518.1,66.0 L 519.9,66.3 L 521.8,66.6 L 523.7,66.8 L 525.6,67.1 L 527.4,67.4 L 529.3,67.7 L 531.2,68.1 L 533.1,68.4 L 534.9,68.7 L 536.8,69.1 L 538.7,69.4 L 540.6,69.8 L 542.4,70.2 L 544.3,70.6 L 546.2,71.0 L 548.0,71.4 L 549.9,71.8 L 551.8,72.2 L 553.7,72.6 L 555.5,73.1 L 557.4,73.5 L 559.3,74.0 L 561.2,74.4 L 563.0,74.9 L 564.9,75.4 L 566.8,75.8 L 568.7,76.3 L 570.5,76.8 L 572.4,77.3 L 574.3,77.8 L 576.2,78.3 L 578.0,78.8 L 579.9,79.3 L 581.8,79.9 L 583.7,80.4 L 585.5,80.9 L 587.4,81.4 L 589.3,82.0 L 591.2,82.5 L 593.0,83.1 L 594.9,83.6 L 596.8,84.1 L 598.7,84.7 L 600.5,85.2 L 602.4,85.8 L 604.3,86.3 L 606.2,86.9 L 608.0,87.4 L 609.9,88.0 L 613.2,88.0 L 616.5,88.0 L 619.8,88.0 L 623.1,88.0 L 626.4,88.0 L 629.6,88.0 L 632.9,88.0 L 636.2,88.0 L 639.5,88.0 L 642.8,88.0 L 646.1,88.0 L 649.4,88.0 L 652.7,88.0 L 656.0,88.0 L 659.3,88.0 L 662.6,88.0 L 665.8,88.0 L 669.1,88.0 L 672.4,88.0 L 675.7,88.0 L 679.0,88.0 L 682.3,88.0 L 685.6,88.0 L 688.9,88.0 L 692.2,88.0 L 695.5,88.0 L 698.8,88.0 L 702.0,88.0 L 705.3,88.0 L 708.6,88.0 L 711.9,88.0 L 715.2,88.0 L 718.5,88.0 L 721.8,88.0 L 725.1,88.0 L 728.4,88.0 L 731.7,88.0 L 735.0,88.0 L 738.2,88.0 L 741.5,88.0 L 744.8,88.0 L 748.1,88.0 L 751.4,88.0 L 754.7,88.0 L 758.0,88.0 L 761.3,88.0 L 764.6,88.0 L 767.9,88.0 L 771.1,88.0 L 774.4,88.0 L 777.7,88.0 L 781.0,88.0 L 784.3,88.0 L 787.6,88.0 L 790.9,88.0 L 794.2,88.0 L 797.5,88.0 L 800.8,88.0 L 804.1,88.0 L 807.3,88.0 L 810.6,88.0 L 813.9,88.0 L 817.2,88.0 L 820.5,88.0 L 823.8,88.0 L 827.1,88.0 L 830.4,88.0 L 833.7,88.0 L 837.0,88.0 L 840.3,88.0 L 843.5,88.0 L 846.8,88.0 L 850.1,88.0 L 853.4,88.0 L 856.7,88.0"
+          fill="none" stroke="#C79E4F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+          stroke-dasharray="893.7" stroke-dashoffset="893.7">
+      <animate attributeName="stroke-dashoffset" from="893.7" to="0" dur="2.4s" begin="0.2s" fill="freeze"
+               calcMode="spline" keySplines="0.16 1 0.3 1" keyTimes="0;1" values="893.7;0"/>
+    </path>
+    <circle cx="267.6" cy="139.5" r="6" fill="#CE604C" opacity="0">
+      <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="2.5s" fill="freeze"/>
+      <animate attributeName="r" values="6;9;6" dur="2.4s" begin="2.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.55;1" dur="2.4s" begin="2.8s" repeatCount="indefinite"/>
+    </circle>
+  </svg>
+  <div class="signal-caption">
+    <span>// production incident, live system</span>
+    <span>detected → recovered → stable</span>
+  </div>
+</div>
 
 <!-- MARQUEE -->
 <div class="marquee-section">
@@ -830,6 +936,8 @@
     </div>
   </div>
 </section>
+
+<div class="section-divider"></div>
 
 <!-- SKILLS -->
 <section id="skills" style="background:var(--bg2)">
@@ -954,6 +1062,8 @@
   </div>
 </section>
 
+<div class="section-divider"></div>
+
 <!-- PROJECTS -->
 <section id="projects">
   <div class="container">
@@ -1071,6 +1181,8 @@
   </div>
 </section>
 
+<div class="section-divider"></div>
+
 <!-- TOOLBOX -->
 <section style="background:var(--bg2)">
   <div class="container">
@@ -1123,6 +1235,8 @@
     </div>
   </div>
 </section>
+
+<div class="section-divider"></div>
 
 <!-- EXPERIENCE -->
 <section id="experience">
@@ -1234,6 +1348,8 @@
   </div>
 </section>
 
+<div class="section-divider"></div>
+
 <!-- TESTIMONIALS -->
 <section style="background:var(--bg2)">
   <div class="container">
@@ -1273,6 +1389,8 @@
   </div>
 </section>
 
+<div class="section-divider"></div>
+
 <!-- ENGAGEMENTS -->
 <section class="looking-section">
   <div class="container">
@@ -1300,6 +1418,8 @@
     <a href="mailto:dvsrwt@gmail.com" class="btn-primary" style="display:inline-block">Start a conversation →</a>
   </div>
 </section>
+
+<div class="section-divider"></div>
 
 <!-- CONTACT -->
 <section id="contact">
@@ -1384,12 +1504,21 @@
     progress.style.transform = `scaleX(${pct})`;
   }, { passive: true });
 
-  // Cursor glow
+  // Cursor glow + custom dot
   const glow = document.getElementById('cursor-glow');
+  const dot = document.getElementById('cursor-dot');
   window.addEventListener('mousemove', e => {
     glow.style.left = e.clientX + 'px';
     glow.style.top = e.clientY + 'px';
+    dot.style.left = e.clientX + 'px';
+    dot.style.top = e.clientY + 'px';
+    dot.classList.add('active');
   }, { passive: true });
+  window.addEventListener('mouseleave', () => dot.classList.remove('active'));
+  document.querySelectorAll('a, button, .tilt, .tool-chip, .hero-tag').forEach(el => {
+    el.addEventListener('mouseenter', () => dot.classList.add('grow'));
+    el.addEventListener('mouseleave', () => dot.classList.remove('grow'));
+  });
 
   // Fade-up on scroll
   const io = new IntersectionObserver(entries => {
@@ -1398,6 +1527,28 @@
     });
   }, { threshold: 0.12 });
   document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  // Section dividers draw-in on scroll
+  const divIo = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); divIo.unobserve(e.target); }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.section-divider').forEach(el => divIo.observe(el));
+
+  // Scrollspy — highlight active nav link based on section in view
+  const navAnchors = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+  const spySections = navAnchors
+    .map(a => document.querySelector(a.getAttribute('href')))
+    .filter(Boolean);
+  const spyIo = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const id = '#' + e.target.id;
+      navAnchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+    });
+  }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+  spySections.forEach(sec => spyIo.observe(sec));
 
   // Counter animation
   const counterObs = new IntersectionObserver(entries => {
