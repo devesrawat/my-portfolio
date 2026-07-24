@@ -1627,7 +1627,7 @@
       if (!e.isIntersecting) return;
       const el = e.target;
       const target = parseInt(el.dataset.target, 10);
-      const dur = 1600;
+      const dur = 900;
       const start = performance.now();
       function step(now) {
         const t = Math.min((now - start) / dur, 1);
@@ -1639,7 +1639,7 @@
       requestAnimationFrame(step);
       counterObs.unobserve(el);
     });
-  }, { threshold: 0.5 });
+  }, { threshold: 0.1 });
   document.querySelectorAll('.counter').forEach(el => counterObs.observe(el));
 
   // 3D tilt
