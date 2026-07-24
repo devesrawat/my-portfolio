@@ -37,7 +37,7 @@
     --steel: #405470;
     --text: #f0f0eb;
     --text2: #a8b2c4;
-    --text3: #6b7688;
+    --text3: #8892a6;
     --font-serif: 'Instrument Serif', Georgia, serif;
     --font-sans: 'DM Sans', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
@@ -773,6 +773,11 @@
     footer { flex-direction: column; gap: 16px; text-align: center; }
     .stats-bar { padding: 36px 20px; }
   }
+  @media (max-width: 480px) {
+    .skills-grid { grid-template-columns: 1fr; }
+    .skill-card.featured { grid-column: span 1; }
+    .hero-title { font-size: clamp(2.2rem, 9vw, 2.8rem); }
+  }
 </style>
 </head>
 <body>
@@ -784,7 +789,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">DR<span>.</span></a>
+  <a href="#" class="nav-logo" aria-label="Home">DR<span>.</span></a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#about">About</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -1237,6 +1242,7 @@
   <div class="container">
     <div class="section-label">Toolbox</div>
     <h2 class="section-title">Every tool in the arsenal</h2>
+    <p class="section-desc">The complete inventory, for scanning against a specific requirement — the Expertise cards above are the curated depth version.</p>
 
     <div class="tools-domains">
       <div>
@@ -1404,6 +1410,7 @@
   <div class="container">
     <div class="section-label">Testimonials</div>
     <h2 class="section-title">What clients say</h2>
+    <p class="section-desc">Shared with client permission — company names withheld per standard fintech NDA and Toptal non-circumvention terms.</p>
 
     <div class="testimonials-grid">
       <div class="testimonial-card fade-up">
