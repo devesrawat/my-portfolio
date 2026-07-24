@@ -143,6 +143,9 @@
     flex-shrink: 0;
   }
   .theme-toggle:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .theme-toggle:focus { outline: none; }
+  .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .theme-toggle, .nav-toggle { -webkit-tap-highlight-color: transparent; }
   .theme-toggle svg { width: 17px; height: 17px; }
   .theme-toggle .icon-sun { display: none; }
   [data-theme="light"] .theme-toggle .icon-sun { display: block; }
@@ -455,10 +458,10 @@
   .proof-chip {
     position: absolute; z-index: 3;
     display: flex; align-items: center; gap: 8px;
-    padding: 10px 16px; background: rgba(13,23,40,0.9);
-    backdrop-filter: blur(12px); border: 1px solid var(--border2);
+    padding: 10px 16px; background: rgba(13,23,40,0.92);
+    backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1);
     border-radius: var(--radius-sm); box-shadow: var(--shadow-md);
-    font-family: var(--font-mono); font-size: 0.72rem; color: var(--text);
+    font-family: var(--font-mono); font-size: 0.72rem; color: #f0f0eb;
     white-space: nowrap;
   }
   .proof-chip .n { color: var(--accent); font-weight: 700; }
@@ -1697,6 +1700,15 @@
     const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
     progress.style.transform = `scaleX(${pct})`;
   }, { passive: true });
+
+  // Back-to-top button
+  const backToTop = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    backToTop.classList.toggle('visible', window.scrollY > window.innerHeight * 0.8);
+  }, { passive: true });
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
   // Cursor glow + custom dot
   const glow = document.getElementById('cursor-glow');
