@@ -72,6 +72,46 @@
     --dur-base: 0.3s;
     --dur-slow: 0.6s;
     --dur-slower: 1.2s;
+
+    --grid-line: rgba(255,255,255,0.02);
+    --code-bg: #0d1728;
+    --code-surface: #182437;
+    --code-border: rgba(255,255,255,0.07);
+    --code-text3: #8892a6;
+    --code-key: #7dd3fc;
+    --code-str: #86efac;
+    --code-bool: #f9a8d4;
+    --code-arr: #e2e8f0;
+    --nav-bg: rgba(10,18,32,0.78);
+  }
+
+  [data-theme="light"] {
+    --bg: #f7f5ef;
+    --bg2: #ffffff;
+    --bg3: #efece2;
+    --surface: #ffffff;
+    --surface2: #f1efe4;
+    --border: rgba(20,32,46,0.09);
+    --border2: rgba(20,32,46,0.16);
+    --accent: #9c7530;
+    --accent2: #7f6027;
+    --accent-dim: rgba(156,117,48,0.1);
+    --accent-glow: rgba(156,117,48,0.22);
+    --rust: #a8422b;
+    --steel: #4c6076;
+    --text: #14202e;
+    --text2: #3d4a5c;
+    --text3: #5c6a7d;
+    --grid-line: rgba(20,32,46,0.05);
+    --nav-bg: rgba(247,245,239,0.82);
+    --code-bg: #ffffff;
+    --code-surface: #eef1f6;
+    --code-border: rgba(20,32,46,0.08);
+    --code-text3: #6b7688;
+    --code-key: #0369a1;
+    --code-str: #15803d;
+    --code-bool: #a3195b;
+    --code-arr: #33465c;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -92,7 +132,37 @@
     font-size: 16px;
     line-height: 1.6;
     overflow-x: hidden;
+    transition: background var(--dur-slow) var(--ease-out), color var(--dur-slow) var(--ease-out);
   }
+
+  .theme-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border2);
+    background: var(--surface); color: var(--text); cursor: pointer;
+    transition: border-color var(--dur-base), background var(--dur-base), transform var(--dur-base) var(--ease-spring);
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .theme-toggle svg { width: 17px; height: 17px; }
+  .theme-toggle .icon-sun { display: none; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: block; }
+  [data-theme="light"] .theme-toggle .icon-moon { display: none; }
+  .theme-toggle-mobile { display: none; }
+
+  /* Back-to-top floating nav aid */
+  #backToTop {
+    position: fixed; right: 28px; bottom: 28px; z-index: 90;
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--surface); border: 1px solid var(--border2);
+    color: var(--text2); cursor: pointer; box-shadow: var(--shadow-md);
+    opacity: 0; transform: translateY(12px) scale(0.9); pointer-events: none;
+    transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-spring), border-color var(--dur-base), color var(--dur-base);
+  }
+  #backToTop.visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  #backToTop:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-3px) scale(1.05); }
+  #backToTop svg { width: 18px; height: 18px; }
+  @media (max-width: 640px) { #backToTop { right: 16px; bottom: 16px; width: 40px; height: 40px; } }
 
   a:focus-visible, button:focus-visible {
     outline: 2px solid var(--accent);
@@ -164,7 +234,7 @@
     padding: 0 48px;
     display: flex; align-items: center; justify-content: space-between;
     height: 68px;
-    background: rgba(10,18,32,0.78);
+    background: var(--nav-bg);
     backdrop-filter: blur(20px) saturate(1.8);
     border-bottom: 1px solid var(--border);
   }
@@ -176,15 +246,16 @@
   .nav-links { display: flex; gap: 36px; list-style: none; }
   .nav-links a {
     color: var(--text2); text-decoration: none; font-size: 0.875rem;
-    font-weight: 500; letter-spacing: 0.02em; transition: color 0.2s;
+    font-weight: 500; letter-spacing: 0.02em; transition: color var(--dur-base) var(--ease-out);
   }
   .nav-links a { position: relative; }
   .nav-links a:hover { color: var(--accent); }
   .nav-links a::after {
     content: ''; position: absolute; left: 0; right: 100%; bottom: -6px; height: 1.5px;
-    background: var(--accent); transition: right var(--dur-base) var(--ease-out);
+    background: var(--accent); transition: right var(--dur-slow) var(--ease-out);
   }
   .nav-links a:hover::after, .nav-links a.active::after { right: 0; }
+  .nav-cta { transition: background var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-spring); }
   .nav-links a.active { color: var(--accent); }
   .nav-cta {
     padding: 8px 20px; background: var(--accent); color: #0a0a0b;
@@ -192,6 +263,7 @@
     text-decoration: none; transition: all 0.2s;
   }
   .nav-cta:hover { background: var(--accent2); transform: translateY(-1px); }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
 
   .nav-toggle {
     display: none; flex-direction: column; justify-content: center; gap: 5px;
@@ -233,8 +305,8 @@
   .hero-grid {
     position: absolute; inset: 0; z-index: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 64px 64px;
     mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
   }
@@ -370,7 +442,7 @@
   }
   .hero-terminal {
     position: relative; z-index: 1;
-    background: var(--bg2);
+    background: var(--code-bg);
     border: 1px solid rgba(199,158,79,0.22); border-radius: var(--radius);
     overflow: hidden;
     box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04), 0 0 0 rgba(199,158,79,0.18);
@@ -397,8 +469,9 @@
   @media (max-width: 1100px) { .proof-chip { display: none; } }
   .terminal-bar {
     display: flex; align-items: center; gap: 8px; padding: 14px 18px;
-    background: var(--surface); border-bottom: 1px solid var(--border);
+    background: var(--code-surface); border-bottom: 1px solid var(--code-border);
   }
+  .terminal-title { color: var(--code-text3) !important; }
   .dot { width: 12px; height: 12px; border-radius: 50%; }
   .dot-red { background: #ff5f57; }
   .dot-yellow { background: #febc2e; }
@@ -410,11 +483,11 @@
   .terminal-body { padding: 20px; font-family: var(--font-mono); font-size: 0.78rem; line-height: 1.8; }
   .t-cursor { display: inline-block; width: 7px; height: 14px; background: var(--accent); margin-left: 2px; vertical-align: middle; animation: caretBlink 1s step-end infinite; }
   @keyframes caretBlink { 50% { opacity: 0; } }
-  .t-key { color: #7dd3fc; }
-  .t-str { color: #86efac; }
-  .t-bool { color: #f9a8d4; }
-  .t-arr { color: #e2e8f0; }
-  .t-dim { color: var(--text3); }
+  .t-key { color: var(--code-key); }
+  .t-str { color: var(--code-str); }
+  .t-bool { color: var(--code-bool); }
+  .t-arr { color: var(--code-arr); }
+  .t-dim { color: var(--code-text3); }
   .t-accent { color: var(--accent); font-weight: 500; }
 
   /* Marquee strip */
@@ -496,7 +569,7 @@
   .bento-card {
     background: var(--bg2); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 28px;
-    transition: border-color 0.3s, transform 0.3s;
+    transition: border-color var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out), background var(--dur-slow) var(--ease-out);
     position: relative; overflow: hidden;
   }
   .bento-card:hover { border-color: var(--border2); transform: translateY(-2px); }
@@ -547,16 +620,17 @@
   .skill-card {
     background: var(--bg2); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 24px;
-    transition: all 0.3s; cursor: default;
+    transition: border-color var(--dur-slower) var(--ease-out), transform var(--dur-slower) var(--ease-out), box-shadow var(--dur-slower) var(--ease-out), background var(--dur-slower) var(--ease-out);
+    cursor: default;
     position: relative; overflow: hidden;
   }
   .skill-card::before {
     content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
     background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    opacity: 0; transition: opacity 0.3s;
+    opacity: 0; transition: opacity var(--dur-slow) var(--ease-out);
   }
   .skill-card:hover { border-color: var(--border2); transform: translateY(-4px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+    box-shadow: var(--shadow-md); }
   .skill-card:hover::before { opacity: 1; }
   .skill-card.featured {
     grid-column: span 2;
@@ -588,13 +662,14 @@
   .project-card {
     background: var(--bg2); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 28px;
-    transition: all 0.3s; position: relative; overflow: hidden;
+    transition: border-color var(--dur-slower) var(--ease-out), transform var(--dur-slower) var(--ease-out), box-shadow var(--dur-slower) var(--ease-out), background var(--dur-slower) var(--ease-out);
+    position: relative; overflow: hidden;
     display: flex; flex-direction: column;
   }
   .project-card::after {
     content: ''; position: absolute; inset: 0; border-radius: var(--radius);
     background: linear-gradient(135deg, rgba(199,158,79,0.05) 0%, transparent 60%);
-    opacity: 0; transition: opacity 0.3s;
+    opacity: 0; transition: opacity var(--dur-slow) var(--ease-out);
   }
   .project-card:hover { border-color: var(--border2); transform: translateY(-4px);
     box-shadow: 0 24px 48px rgba(0,0,0,0.5); }
@@ -618,6 +693,11 @@
   .badge-web3 { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
   .badge-ai { background: rgba(64,84,112,0.25); color: #9db3d1; border: 1px solid rgba(64,84,112,0.4); }
   .badge-fintech { background: rgba(199,158,79,0.15); color: var(--accent); border: 1px solid rgba(199,158,79,0.35); }
+  .badge-iot { background: rgba(56,189,248,0.15); color: #38bdf8; border: 1px solid rgba(56,189,248,0.35); }
+  [data-theme="light"] .badge-web3 { color: #7c3aed; }
+  [data-theme="light"] .badge-ai { color: #33465c; }
+  [data-theme="light"] .badge-iot { color: #0284c7; }
+  [data-theme="light"] .badge-live { color: #16803d; }
   .project-name { font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 10px; }
   .project-desc { font-size: 0.875rem; color: var(--text2); line-height: 1.6; flex: 1; }
   .project-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
@@ -630,7 +710,7 @@
   .tool-chip {
     padding: 7px 14px; background: var(--surface); border: 1px solid var(--border);
     border-radius: var(--radius-sm); font-size: 0.8rem; font-family: var(--font-mono);
-    color: var(--text2); transition: all 0.2s;
+    color: var(--text2); transition: background var(--dur-slow) var(--ease-out), border-color var(--dur-slow) var(--ease-out), color var(--dur-slow) var(--ease-out);
   }
   .tool-chip:hover { background: var(--surface2); border-color: var(--accent); color: var(--accent); }
   .tool-chip.hot { border-color: rgba(199,158,79,0.3); color: var(--text); }
@@ -651,7 +731,7 @@
   }
   .exp-card {
     background: var(--bg2); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 28px; transition: border-color 0.3s;
+    border-radius: var(--radius); padding: 28px; transition: border-color var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
   }
   .exp-card:hover { border-color: var(--border2); }
   .exp-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; gap: 16px; }
@@ -685,8 +765,8 @@
     text-align: center;
   }
   .looking-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin: 48px 0; }
-  .looking-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: all 0.3s; text-align: left; }
-  .looking-card:hover { border-color: rgba(199,158,79,0.3); }
+  .looking-card { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: border-color var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); text-align: left; }
+  .looking-card:hover { border-color: rgba(199,158,79,0.3); transform: translateY(-2px); }
   .looking-icon { font-size: 1.75rem; margin-bottom: 14px; }
   .looking-title { font-size: 0.95rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
   .looking-desc { font-size: 0.82rem; color: var(--text2); line-height: 1.6; }
@@ -697,9 +777,9 @@
   .contact-link {
     display: flex; align-items: center; gap: 16px; padding: 16px 20px;
     background: var(--bg2); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); text-decoration: none; transition: all 0.2s; color: var(--text);
+    border-radius: var(--radius-sm); text-decoration: none; transition: border-color var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); color: var(--text);
   }
-  .contact-link:hover { border-color: var(--accent); }
+  .contact-link:hover { border-color: var(--accent); transform: translateX(4px); }
   .contact-link-icon { font-size: 1.1rem; width: 28px; text-align: center; }
   .contact-link-label { font-size: 0.875rem; font-weight: 500; }
   .contact-link-value { font-size: 0.8rem; color: var(--text3); font-family: var(--font-mono); margin-left: auto; }
@@ -787,6 +867,10 @@
 <div id="cursor-dot"></div>
 <div id="grain"></div>
 
+<button id="backToTop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo" aria-label="Home">DR<span>.</span></a>
@@ -798,10 +882,16 @@
     <li><a href="#contact">Contact</a></li>
     <li class="nav-cta-mobile"><a href="mailto:dvsrwt@gmail.com">Get in touch →</a></li>
   </ul>
-  <a href="mailto:dvsrwt@gmail.com" class="nav-cta">Get in touch →</a>
-  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+    <a href="mailto:dvsrwt@gmail.com" class="nav-cta">Get in touch →</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -826,6 +916,7 @@
       <div class="hero-tag">Temporal Cloud</div>
       <div class="hero-tag">MCP</div>
       <div class="hero-tag">RAG</div>
+      <div class="hero-tag">IoT / Telematics</div>
       <div class="hero-tag">Rust</div>
       <div class="hero-tag">TypeScript</div>
       <div class="hero-tag">Python</div>
@@ -879,18 +970,18 @@
   <svg viewBox="0 0 900 160" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Failure-spike signal recovering into a stable line">
     <defs>
       <linearGradient id="sigbg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#0A1220"/>
-        <stop offset="100%" stop-color="#121E32"/>
+        <stop offset="0%" style="stop-color:var(--code-bg)"/>
+        <stop offset="100%" style="stop-color:var(--code-surface)"/>
       </linearGradient>
     </defs>
     <rect width="900" height="160" rx="16" fill="url(#sigbg)"/>
     <path d="M 40.0,88.0 L 42.3,88.0 L 44.7,88.0 L 47.0,88.0 L 49.4,88.0 L 51.7,88.0 L 54.1,88.0 L 56.4,88.0 L 58.7,88.0 L 61.1,88.0 L 63.4,88.0 L 65.8,88.0 L 68.1,88.0 L 70.5,88.0 L 72.8,88.0 L 75.1,88.0 L 77.5,88.0 L 79.8,88.0 L 82.2,88.0 L 84.5,88.0 L 86.9,88.0 L 89.2,88.0 L 91.5,88.0 L 93.9,88.0 L 96.2,88.0 L 98.6,88.0 L 100.9,88.0 L 103.3,88.0 L 105.6,88.0 L 107.9,88.0 L 110.3,88.0 L 112.6,88.0 L 115.0,88.0 L 117.3,88.0 L 119.7,88.0 L 122.0,88.0 L 124.3,88.0 L 126.7,88.0 L 129.0,88.0 L 131.4,88.0 L 133.7,88.0 L 136.1,88.0 L 138.4,88.0 L 140.7,88.0 L 143.1,88.0 L 145.4,88.0 L 147.8,88.0 L 150.1,88.0 L 152.5,88.0 L 154.8,88.0 L 157.1,88.0 L 159.5,88.0 L 161.8,88.0 L 164.2,88.0 L 166.5,88.0 L 168.9,88.0 L 171.2,88.0 L 173.2,87.4 L 175.3,86.8 L 177.3,86.1 L 179.4,85.5 L 181.4,85.0 L 183.5,84.4 L 185.5,83.9 L 187.6,83.4 L 189.6,82.9 L 191.7,82.5 L 193.8,82.1 L 195.8,81.8 L 197.8,81.5 L 199.9,81.3 L 201.9,81.1 L 204.0,80.9 L 206.0,80.9 L 208.1,80.8 L 210.1,80.9 L 212.2,80.9 L 214.2,81.1 L 216.3,81.3 L 218.3,81.5 L 220.4,81.8 L 222.4,82.1 L 224.5,82.5 L 226.5,82.9 L 228.6,83.4 L 230.6,83.9 L 232.7,84.4 L 234.8,85.0 L 236.8,85.5 L 238.8,86.1 L 240.9,86.8 L 242.9,87.4 L 245.0,88.0 L 246.6,93.8 L 248.2,99.5 L 249.8,105.0 L 251.4,110.4 L 253.1,115.4 L 254.7,120.1 L 256.3,124.4 L 257.9,128.3 L 259.5,131.6 L 261.1,134.4 L 262.7,136.6 L 264.3,138.2 L 265.9,139.2 L 267.6,139.5 L 269.2,139.2 L 270.8,138.2 L 272.4,136.6 L 274.0,134.4 L 275.6,131.6 L 277.2,128.3 L 278.8,124.4 L 280.4,120.1 L 282.0,115.4 L 283.7,110.4 L 285.3,105.0 L 286.9,99.5 L 288.5,93.8 L 290.1,93.4 L 292.5,93.4 L 294.9,93.4 L 297.3,93.4 L 299.7,93.4 L 302.1,93.4 L 304.5,93.4 L 306.8,93.4 L 309.2,93.4 L 311.6,93.4 L 314.0,93.4 L 316.4,93.4 L 318.8,93.4 L 321.2,93.4 L 323.6,93.4 L 326.0,93.4 L 328.4,93.4 L 330.8,93.4 L 333.2,93.4 L 335.5,93.4 L 337.9,93.4 L 340.3,93.4 L 342.7,93.4 L 345.1,93.4 L 347.5,88.0 L 349.4,87.4 L 351.2,86.9 L 353.1,86.3 L 355.0,85.8 L 356.9,85.2 L 358.7,84.7 L 360.6,84.1 L 362.5,83.6 L 364.4,83.1 L 366.2,82.5 L 368.1,82.0 L 370.0,81.4 L 371.9,80.9 L 373.7,80.4 L 375.6,79.9 L 377.5,79.3 L 379.4,78.8 L 381.2,78.3 L 383.1,77.8 L 385.0,77.3 L 386.9,76.8 L 388.7,76.3 L 390.6,75.8 L 392.5,75.4 L 394.4,74.9 L 396.2,74.4 L 398.1,74.0 L 400.0,73.5 L 401.9,73.1 L 403.7,72.6 L 405.6,72.2 L 407.5,71.8 L 409.4,71.4 L 411.2,71.0 L 413.1,70.6 L 415.0,70.2 L 416.8,69.8 L 418.7,69.4 L 420.6,69.1 L 422.5,68.7 L 424.3,68.4 L 426.2,68.1 L 428.1,67.7 L 430.0,67.4 L 431.8,67.1 L 433.7,66.8 L 435.6,66.6 L 437.5,66.3 L 439.3,66.0 L 441.2,65.8 L 443.1,65.6 L 445.0,65.3 L 446.8,65.1 L 448.7,64.9 L 450.6,64.7 L 452.5,64.6 L 454.3,64.4 L 456.2,64.2 L 458.1,64.1 L 460.0,64.0 L 461.8,63.9 L 463.7,63.8 L 465.6,63.7 L 467.5,63.6 L 469.3,63.5 L 471.2,63.5 L 473.1,63.4 L 475.0,63.4 L 476.8,63.4 L 478.7,63.4 L 480.6,63.4 L 482.4,63.4 L 484.3,63.4 L 486.2,63.5 L 488.1,63.5 L 489.9,63.6 L 491.8,63.7 L 493.7,63.8 L 495.6,63.9 L 497.4,64.0 L 499.3,64.1 L 501.2,64.2 L 503.1,64.4 L 504.9,64.6 L 506.8,64.7 L 508.7,64.9 L 510.6,65.1 L 512.4,65.3 L 514.3,65.6 L 516.2,65.8 L 518.1,66.0 L 519.9,66.3 L 521.8,66.6 L 523.7,66.8 L 525.6,67.1 L 527.4,67.4 L 529.3,67.7 L 531.2,68.1 L 533.1,68.4 L 534.9,68.7 L 536.8,69.1 L 538.7,69.4 L 540.6,69.8 L 542.4,70.2 L 544.3,70.6 L 546.2,71.0 L 548.0,71.4 L 549.9,71.8 L 551.8,72.2 L 553.7,72.6 L 555.5,73.1 L 557.4,73.5 L 559.3,74.0 L 561.2,74.4 L 563.0,74.9 L 564.9,75.4 L 566.8,75.8 L 568.7,76.3 L 570.5,76.8 L 572.4,77.3 L 574.3,77.8 L 576.2,78.3 L 578.0,78.8 L 579.9,79.3 L 581.8,79.9 L 583.7,80.4 L 585.5,80.9 L 587.4,81.4 L 589.3,82.0 L 591.2,82.5 L 593.0,83.1 L 594.9,83.6 L 596.8,84.1 L 598.7,84.7 L 600.5,85.2 L 602.4,85.8 L 604.3,86.3 L 606.2,86.9 L 608.0,87.4 L 609.9,88.0 L 613.2,88.0 L 616.5,88.0 L 619.8,88.0 L 623.1,88.0 L 626.4,88.0 L 629.6,88.0 L 632.9,88.0 L 636.2,88.0 L 639.5,88.0 L 642.8,88.0 L 646.1,88.0 L 649.4,88.0 L 652.7,88.0 L 656.0,88.0 L 659.3,88.0 L 662.6,88.0 L 665.8,88.0 L 669.1,88.0 L 672.4,88.0 L 675.7,88.0 L 679.0,88.0 L 682.3,88.0 L 685.6,88.0 L 688.9,88.0 L 692.2,88.0 L 695.5,88.0 L 698.8,88.0 L 702.0,88.0 L 705.3,88.0 L 708.6,88.0 L 711.9,88.0 L 715.2,88.0 L 718.5,88.0 L 721.8,88.0 L 725.1,88.0 L 728.4,88.0 L 731.7,88.0 L 735.0,88.0 L 738.2,88.0 L 741.5,88.0 L 744.8,88.0 L 748.1,88.0 L 751.4,88.0 L 754.7,88.0 L 758.0,88.0 L 761.3,88.0 L 764.6,88.0 L 767.9,88.0 L 771.1,88.0 L 774.4,88.0 L 777.7,88.0 L 781.0,88.0 L 784.3,88.0 L 787.6,88.0 L 790.9,88.0 L 794.2,88.0 L 797.5,88.0 L 800.8,88.0 L 804.1,88.0 L 807.3,88.0 L 810.6,88.0 L 813.9,88.0 L 817.2,88.0 L 820.5,88.0 L 823.8,88.0 L 827.1,88.0 L 830.4,88.0 L 833.7,88.0 L 837.0,88.0 L 840.3,88.0 L 843.5,88.0 L 846.8,88.0 L 850.1,88.0 L 853.4,88.0 L 856.7,88.0"
-          fill="none" stroke="#C79E4F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+          fill="none" style="stroke:var(--accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
           stroke-dasharray="893.7" stroke-dashoffset="893.7">
       <animate attributeName="stroke-dashoffset" from="893.7" to="0" dur="2.4s" begin="0.2s" fill="freeze"
                calcMode="spline" keySplines="0.16 1 0.3 1" keyTimes="0;1" values="893.7;0"/>
     </path>
-    <circle cx="267.6" cy="139.5" r="6" fill="#CE604C" opacity="0">
+    <circle cx="267.6" cy="139.5" r="6" style="fill:var(--rust)" opacity="0">
       <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="2.5s" fill="freeze"/>
       <animate attributeName="r" values="6;9;6" dur="2.4s" begin="2.8s" repeatCount="indefinite"/>
       <animate attributeName="opacity" values="1;0.55;1" dur="2.4s" begin="2.8s" repeatCount="indefinite"/>
@@ -919,7 +1010,7 @@
       <div class="stat-label">Production Systems</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num"><span class="counter" data-target="5">0</span></div>
+      <div class="stat-num"><span class="counter" data-target="6">0</span></div>
       <div class="stat-label">Industry Domains</div>
     </div>
     <div class="stat-item">
@@ -981,6 +1072,7 @@
         <span class="bento-label">Domains</span>
         <div class="fun-stack">
           <div class="fun-row"><span>Fintech</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
+          <div class="fun-row"><span>IoT / Mobility</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
           <div class="fun-row"><span>Regulatory Compliance</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
           <div class="fun-row"><span>AI Platforms</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
           <div class="fun-row"><span>Healthcare</span><span style="color:var(--accent);font-size:0.7rem">●</span></div>
@@ -1128,6 +1220,25 @@
     <div class="projects-grid">
       <div class="project-card active fade-up tilt">
         <div class="project-header">
+          <div class="project-icon">📡</div>
+          <div class="project-badges">
+            <span class="project-badge badge-iot">IoT / Telematics</span>
+            <span class="project-badge badge-live">Live</span>
+          </div>
+        </div>
+        <div class="project-name">Nexular — EV Fleet Intelligence <a href="https://www.nexular.com/" target="_blank" rel="noopener" aria-label="Visit Nexular" style="color:var(--text3);text-decoration:none;font-size:0.8em;">↗</a></div>
+        <div class="project-desc">Production telematics AI agent for Nexular's Edge platform — real-time fleet management for electric two/three-wheelers (BodaBodas, TukTuks, motorcycles) across India, Africa &amp; Southeast Asia. LangGraph multi-agent orchestration + hybrid RAG deliver Q&amp;A over high-volume CAN-bus IoT telemetry; Redis semantic caching cuts redundant LLM calls; multi-model routing (Claude Haiku/Sonnet) by query complexity.</div>
+        <div class="project-tech">
+          <span class="tech-pill">LangGraph</span>
+          <span class="tech-pill">Hybrid RAG</span>
+          <span class="tech-pill">Redis Semantic Cache</span>
+          <span class="tech-pill">Kubernetes</span>
+          <span class="tech-pill">Hugging Face</span>
+        </div>
+      </div>
+
+      <div class="project-card fade-up tilt">
+        <div class="project-header">
           <div class="project-icon">🏦</div>
           <div class="project-badges">
             <span class="project-badge badge-fintech">Regulated FinTech</span>
@@ -1252,6 +1363,12 @@
         </div>
       </div>
       <div>
+        <div class="tool-domain-name">IoT &amp; Telematics</div>
+        <div class="tool-chips">
+          <span class="tool-chip hot">CAN Bus Telemetry</span><span class="tool-chip hot">Real-Time Fleet Tracking</span><span class="tool-chip">Hybrid RAG</span><span class="tool-chip">Predictive Maintenance</span><span class="tool-chip">Hugging Face Embeddings</span>
+        </div>
+      </div>
+      <div>
         <div class="tool-domain-name">Languages</div>
         <div class="tool-chips">
           <span class="tool-chip hot">Rust</span><span class="tool-chip hot">TypeScript</span><span class="tool-chip hot">Python 3.11+</span><span class="tool-chip">JavaScript</span><span class="tool-chip">Solidity</span><span class="tool-chip">SQL</span><span class="tool-chip">Bash</span>
@@ -1306,7 +1423,7 @@
           <div class="exp-header">
             <div>
               <div class="exp-role">Lead Engineer</div>
-              <div class="exp-company"><span>Nexular</span> — Real-Time Telematics Platform</div>
+              <div class="exp-company"><a href="https://www.nexular.com/" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;"><span>Nexular</span></a> — Real-Time Telematics Platform</div>
             </div>
             <div class="exp-meta">
               <span class="exp-period">Mar 2026 – Present</span>
@@ -1534,11 +1651,32 @@
     <a href="#skills">Skills</a>
     <a href="#projects">Projects</a>
     <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
     <a href="mailto:dvsrwt@gmail.com">Email</a>
+    <a href="#home">Back to top ↑</a>
   </div>
 </footer>
 
 <script>
+  // Theme (light/dark) — persisted, defaults to system preference
+  (function() {
+    const root = document.documentElement;
+    const metaTheme = document.querySelector('meta[name="theme-color"]');
+    const saved = localStorage.getItem('theme');
+    const systemLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+    const initial = saved || (systemLight ? 'light' : 'dark');
+    if (initial === 'light') { root.setAttribute('data-theme', 'light'); if (metaTheme) metaTheme.setAttribute('content', '#f7f5ef'); }
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('themeToggle');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        const isLight = root.getAttribute('data-theme') === 'light';
+        if (isLight) { root.removeAttribute('data-theme'); localStorage.setItem('theme', 'dark'); if (metaTheme) metaTheme.setAttribute('content', '#0a1220'); }
+        else { root.setAttribute('data-theme', 'light'); localStorage.setItem('theme', 'light'); if (metaTheme) metaTheme.setAttribute('content', '#f7f5ef'); }
+      });
+    });
+  })();
+
   // Mobile nav toggle
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
@@ -1661,7 +1799,7 @@
   const items = [
     'BACS Payments','ClearBank','Mambu Core Banking','Currency Cloud','Temporal Cloud',
     'LangGraph','MCP Protocol','Anthropic SDK','RAG Pipelines','Compliance-Aware RAG',
-    'NestJS','FastAPI','pgvector','AWS SQS','PostgreSQL',
+    'IoT Telematics','CAN Bus','NestJS','FastAPI','pgvector','AWS SQS','PostgreSQL',
     'Redis','Kubernetes','Rust','TypeScript','Groq API',
     'CrewAI','Docker','GitHub Actions','TimescaleDB','Actix-web',
   ];
